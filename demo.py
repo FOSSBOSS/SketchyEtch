@@ -156,6 +156,40 @@ def taiju():
     t.circle(RAD6)
     t.end_fill()    
             
+def gear1(teeth,tdepth, twidth, RAD):
+    # Setup Turtle
+    t.home()
+    t.speed(10)
+    t.hideturtle()
+    #print(t.pos())
+
+    # Calculate the angle for each tooth
+    angle = 360 / teeth
+
+    # Draw one gear fragment for the number of teeth
+    for _ in range(teeth):
+
+        t.forward(twidth)        
+        t.left(90)                        
+        t.forward(tdepth)       
+        t.right(90)                      
+        t.circle(RAD,angle)     
+        t.right(90)                      
+        t.forward(tdepth)       
+        t.left(90)                        
+
+    # Inner circle 
+    t.penup()
+    t.goto(0,0)
+    t.goto(twidth/2, RAD/2) 
+    t.pendown()
+    t.circle(RAD, 360)
+
+# Draw a pine tree
+
+####END FUNCTIONS######
+
+
 """
 Functions:
 draw_Flower()
@@ -163,6 +197,7 @@ mandala()
 arguelles()
 dumpSRC()
 taiju()
+gear1
 """  
     
 arguelles()
@@ -185,6 +220,17 @@ blank()
 mandala() # on func end color is yellow
 time.sleep(3)
 
+blank()
+
+# Example: 
+# gear(teeth,tdepth, twidth, RAD)
+gear1(12, 15, 20, 100)
+t.pencolor("red")
+t.penup()
+t.goto(-100,-250)
+t.pendown()
+t.write("Bangor Makerspace", font=("Arial", 24, "normal"))
+
 """      
 #Todo 
 *Fixed! bugs that occurred when making it run full screen
@@ -193,4 +239,4 @@ add more functions,
  listen for IO, 
  kill other processes, 
  write a class, or a library
-"""       
+"""            
