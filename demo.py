@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+ #!/usr/bin/python3
 import turtle 
 import time
 import math
@@ -17,8 +17,9 @@ screen.setup(width=1.0, height=1.0)  # Set the window to full-screen mode
 
 ####General Use Function#####
 def blank():
-    t.clear()
     t.goto(0,0)
+    t.clear()
+    t.hideturtle()
 
 
 #######Function drawings#####
@@ -88,15 +89,15 @@ def arguelles():
 def dumpSRC():
     def draw_text_line(t, text, y):
         t.penup()
-        t.goto(-300, y)  # Start position for the text
+        t.goto(-500, y)  # Start position for the text
         t.pendown()
-        t.write(text, font=("Arial", 12, "normal"))  # Write the text
+        t.write(text, font=("Arial", 24, "normal"))  # Write the text
     
     with open("source.txt", "r") as file:
         y = 350  # Starting y-coordinate for the first line of text
         for line in file:
             draw_text_line(t, line.strip(), y)
-            y -= 20  # Move down for the next line
+            y -= 34  # Move down for the next line
 
         # Check if the next line will exceed the window height
             if y < -350:
@@ -156,10 +157,10 @@ def taiju():
     t.circle(RAD6)
     t.end_fill()    
             
-def gear1(teeth,tdepth, twidth, RAD):
+def gear1(teeth, tdepth, twidth, RAD):
     # Setup Turtle
     t.home()
-    t.speed(10)
+    t.speed(0)
     t.hideturtle()
     #print(t.pos())
 
@@ -181,7 +182,8 @@ def gear1(teeth,tdepth, twidth, RAD):
     # Inner circle 
     t.penup()
     t.goto(0,0)
-    t.goto(twidth/2, RAD/2) 
+    #t.goto(twidth/2, (tdepth + RAD) /math.pi) 
+    t.goto(twidth/2, tdepth*2) 
     t.pendown()
     t.circle(RAD, 360)
 
@@ -200,43 +202,4 @@ taiju()
 gear1
 """  
     
-arguelles()
-time.sleep(3)
-blank()
-
-draw_Flower()
-time.sleep(3)
-blank()
-
-dumpSRC() #text size could be increased
-time.sleep(3)
-t.clear()
-
-t.color("black")
-taiju()        
-time.sleep(3)     
-
-blank()
-mandala() # on func end color is yellow
-time.sleep(3)
-
-blank()
-
-# Example: 
-# gear(teeth,tdepth, twidth, RAD)
-gear1(12, 15, 20, 100)
-t.pencolor("red")
-t.penup()
-t.goto(-100,-250)
-t.pendown()
-t.write("Bangor Makerspace", font=("Arial", 24, "normal"))
-
-"""      
-#Todo 
-*Fixed! bugs that occurred when making it run full screen
-add more functions,
- write a loop. 
- listen for IO, 
- kill other processes, 
- write a class, or a library
-"""            
+   
