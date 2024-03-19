@@ -1,8 +1,6 @@
 #include <Encoder.h>
 #include <Keyboard.h>
-// Built on a teensy 4.1, though any MCU capable of keystrokes should work.
-// Intended to interface with fsTurt.py
-// IO Needs debouncing.  
+#include <Bounce2.h>
 // Define IO
 #define ENCODER1_PINA 1
 #define ENCODER1_PINB 3
@@ -12,31 +10,54 @@
 #define clear_Btn     27  // c key
 #define lift_Btn      9   // l key
 #define save_Btn      29  // s key
-#define demo_Btn      31  // d
+#define demo_Btn      31  // d key
 // Create encoder objects
-
 Encoder encoder1(ENCODER1_PINA, ENCODER1_PINB);
 Encoder encoder2(ENCODER2_PINA, ENCODER2_PINB);
-
+// Create Bounce objects for buttons
+Bounce colorButton = Bounce();
+Bounce clearButton = Bounce();
+Bounce liftButton  = Bounce();
+Bounce saveButton  = Bounce();
+Bounce demoButton  = Bounce();
 // Variables to track encoder movement direction
 int prevEncoder1Position = 0;
 int prevEncoder2Position = 0;
 
 void setup() {
+  /*
+   * Bounce sets up pins.
   pinMode(color_Btn, INPUT_PULLUP);
   pinMode(clear_Btn, INPUT_PULLUP);
   pinMode(lift_Btn,  INPUT_PULLUP);
   pinMode(save_Btn,  INPUT_PULLUP);
   pinMode(demo_Btn,  INPUT_PULLUP);  
-  
+*/
+  int bounceTime = 5;
+  // Attach buttons to Bounce objects and set debounce interval
+  colorButton.attach(color_Btn, INPUT_PULLUP);
+  colorButton.interval(bounceTime);
+
+  clearButton.attach(clear_Btn, INPUT_PULLUP);
+  clearButton.interval(bounceTime);
+
+  liftButton.attach(lift_Btn, INPUT_PULLUP);
+  liftButton.interval(bounceTime);
+
+  saveButton.attach(save_Btn, INPUT_PULLUP);
+  saveButton.interval(bounceTime);
+
+  demoButton.attach(demo_Btn, INPUT_PULLUP);
+  demoButton.interval(bounceTime);  
   Serial.begin(9600);
-  delay(3000);
- /* 
+  delay(3000); 
+/*
   while (!Serial) {
     ; // Wait for serial port to connect
       // This is only for debuggig
   }
 */
+Serial.println("Sketchy Etch initialied");
   Keyboard.begin();
 }
 
@@ -67,9 +88,11 @@ void loop() {
 
   // Use encoder direction variables to perform actions
   if (encoder1Direction == -1) {
+    Serial.println("LEFT");
     Keyboard.press(KEY_LEFT_ARROW);
     Keyboard.release(KEY_LEFT_ARROW);
   } else if (encoder1Direction == 1) {
+    Serial.println("RiGHT");
     Keyboard.press(KEY_RIGHT_ARROW);
     Keyboard.release(KEY_RIGHT_ARROW);
   } else {
@@ -78,10 +101,12 @@ void loop() {
   }
 
   if (encoder2Direction == 1) {
+    Serial.println("UP");
     Keyboard.press(KEY_UP_ARROW);
     Keyboard.release(KEY_UP_ARROW);
   } else if (encoder2Direction == -1) {
     //Serial.println("Encoder 2: Negative");
+    Serial.println("DOWN");
     Keyboard.press(KEY_DOWN_ARROW);
     Keyboard.release(KEY_DOWN_ARROW);
   } else {
@@ -89,37 +114,47 @@ void loop() {
     Keyboard.release(KEY_UP_ARROW);
   }
 
- 
-  if(digitalRead(color_Btn) == LOW){
-   // Serial.println("G");
+  // Handle button presses with debouncing
+  colorButton.update();
+  if (colorButton.fell()) {
+  //if(digitalRead(color_Btn) == LOW){
+    Serial.println("Color Change");
     Keyboard.press(KEY_G);
     Keyboard.release(KEY_G);
     }
-  if(digitalRead(clear_Btn) == LOW){
-    //Serial.println("C");
+  
+  clearButton.update();
+  if (clearButton.fell()) {  
+  //if(digitalRead(clear_Btn) == LOW){
+    Serial.println("CLEAR");
     Keyboard.press(KEY_C);
     Keyboard.release(KEY_C);
     }
-    
-  if(digitalRead(lift_Btn) == LOW){
-    //Serial.println("L");
+  
+  liftButton.update();
+  if (liftButton.fell()) {  
+  //if(digitalRead(lift_Btn) == LOW){
+    Serial.println("LIFT");
     Keyboard.press(KEY_L);
     Keyboard.release(KEY_L);
     }
-/* 
-  if(digitalRead(save_Btn) == LOW){
-    Serial.println("S");
-    //Keyboard.press(KEY_S);
-    //Keyboard.release(KEY_S);
-    delay(3000); //can we save a file in 3s?
+  saveButton.update();
+  if (saveButton.fell()) {
+  //if(digitalRead(save_Btn) == LOW){
+    Serial.println("Save");
+    Keyboard.press(KEY_S);
+    Keyboard.release(KEY_S);
+    delay(2000); //Really want to prevent spamming this one. 
     } 
-
-  if(digitalRead(demo_Btn) == LOW){
+/*
+  demoButton.update();
+  if (demoButton.fell()) {
+  //if(digitalRead(demo_Btn) == LOW){
     Serial.println("D");
     //Keyboard.press(KEY_D);
     //Keyboard.release(KEY_D);
     }   
 */
   // Delay to prevent spamming
-  delay(100);
+  delay(70);
 }
