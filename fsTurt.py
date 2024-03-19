@@ -95,8 +95,3 @@ screen.onkeypress(lambda: saveSVG("save"), "s")
 screen.listen()  # Listen for key presses
 
 screen.mainloop()
-
-
-screen.listen()  # Listen for key presses
-
-screen.mainloop()
