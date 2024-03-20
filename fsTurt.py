@@ -4,7 +4,6 @@ import os
 import time
 import demo
 # Discount Sketch-Y-Etch version for standard keyboard hardware
-# OK turns out Im super frustrated with raw_turtle  and GPIO latency.
 # using a teensy for IO, and processing the keypresses.
 
 t = turtle.Turtle()
