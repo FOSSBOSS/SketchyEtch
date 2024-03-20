@@ -5,3 +5,13 @@ Button features include: Save, penup / pendown, colour change, and erase.
 Rotary encoders are used to perform XY cordinate based drawing. 
 
 Built on a Raspberry Pi 3B+. 
+
+Here are some documentation resources I found helpful:
+Turtle Graphics API:
+https://docs.python.org/3/library/turtle.html
+
+How to Autostart Programs in Raspberry Pi OS:
+https://www.instructables.com/Autostart-a-Program-When-Raspberry-Pi-Boots-Newbie/
+
+This command may be needed:
+sudo apt install lxsession-default-apps
