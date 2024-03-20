@@ -2,6 +2,7 @@
 import turtle
 import os
 import time
+import demo
 # Discount Sketch-Y-Etch version for standard keyboard hardware
 # OK turns out Im super frustrated with raw_turtle  and GPIO latency.
 # using a teensy for IO, and processing the keypresses.
@@ -65,7 +66,7 @@ def saveSVG(channel):    # s key
     # Construct the file name with the current time and the .ps extension
     ps_file_name = f"{current_time}.ps"
     svg_file_name = f"{current_time}.svg"
-    File_path = '/home/e/img'
+    File_path = '/home/m/Desktop/git/SketchyEtch'
     output_path = os.path.join(File_path, svg_file_name)
     with open(ps_file_name, 'w') as f:
         f.write(canvas_data)
@@ -74,8 +75,26 @@ def saveSVG(channel):    # s key
     os.system('eps2svg ' + ps_file_name + ' ' + output_path)
     os.system('rm ' + ps_file_name)
 
-#def demo(channel):
-
+# Demo mode switch
+def demoMode(channel):
+    t.hideturtle()
+    demo.dumpSRC()
+    time.sleep(2)
+    demo.blank()
+    demo.draw_Flower()
+    time.sleep(3)
+    demo.blank()
+    demo.arguelles()
+    time.sleep(3)
+    demo.blank()
+    demo.mandala()
+    time.sleep(3)
+    demo.blank()
+    demo.taiju() 
+    time.sleep(3)
+    demo.blank()
+    t.showturtle()   
+        
 screen = turtle.Screen()
 screen.setup(width=1.0, height=1.0)  # Set the window to full-screen mode
 
@@ -93,7 +112,7 @@ screen.onkeypress(lambda: move("Quit"), "q")
 screen.onkeypress(lambda: Colour("Color"), "g")
 screen.onkeypress(lambda: lift_pen("lift"), "l")
 screen.onkeypress(lambda: saveSVG("save"), "s")
-#screen.onkeypress(lambda: demo("demo"), "d")
+screen.onkeypress(lambda: demoMode("demo"), "d")
 
 screen.listen()  # Listen for key presses
 
