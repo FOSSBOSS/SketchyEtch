@@ -1,7 +1,8 @@
- #!/usr/bin/python3
+ #!/usr/bin/env python3
 import turtle 
 import time
 import math
+import random
 # There is a chance all of this has to be in raw mode on the pi
 #Demo functions for sketch-y-etch
 
@@ -9,7 +10,8 @@ t = turtle.Turtle()
 t.hideturtle()
 t.speed(0.5)
 t.width(4)
-t.color("blue")
+#t.color("blue")
+t.color(random.random(), random.random(), random.random())
 
 # Set up the turtle screen
 screen = turtle.Screen()
@@ -20,6 +22,7 @@ def blank():
     t.goto(0,0)
     t.clear()
     t.hideturtle()
+    t.color(random.random(), random.random(), random.random())
 
 
 #######Function drawings#####
@@ -48,13 +51,13 @@ def mandala():
 ## http://programming1work.oyosite.com/ch_turtle-mandala.html
     t.pendown()
     for times in range(36):
-        t.color("blue")
+        t.color(random.random(), random.random(), random.random())
         t.speed(11)
         t.circle(100)
         t.color("red")
         t.forward(200)
         t.left(120)
-        t.color("orange")
+        t.color(random.random(), 0, 0)
         t.forward(100)
         t.right(120)
         t.left(170)
@@ -97,6 +100,7 @@ def dumpSRC():
         y = 350  # Starting y-coordinate for the first line of text
         for line in file:
             draw_text_line(t, line.strip(), y)
+            t.color(random.random(), random.random(), random.random())
             y -= 34  # Move down for the next line
 
         # Check if the next line will exceed the window height
@@ -111,6 +115,7 @@ def dumpSRC():
 # Draw a yin yang symbol
 def taiju():
     t.penup()
+    t.home()
     RAD = 200
     RAD2 = RAD / 2
     RAD6 = RAD / 6
@@ -162,6 +167,7 @@ def gear1(teeth, tdepth, twidth, RAD):
     t.home()
     t.speed(0)
     t.hideturtle()
+    t.color("red")
     #print(t.pos())
 
     # Calculate the angle for each tooth
@@ -200,6 +206,4 @@ arguelles()
 dumpSRC()
 taiju()
 gear1
-"""  
-    
-   
+"""   
