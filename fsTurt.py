@@ -1,13 +1,15 @@
 #!/usr/bin/python3
 import turtle
 import os
+import time
 # Discount Sketch-Y-Etch version for standard keyboard hardware
 # OK turns out Im super frustrated with raw_turtle  and GPIO latency.
 # using a teensy for IO, and processing the keypresses.
 
 t = turtle.Turtle()
 t.home()
-#t.shapesize(0.5)  # Cursor size: 0.5 is half of normal
+t.shape('circle')
+t.shapesize(0.5)  # Cursor size: 0.5 is half of normal
 t.width(10)
 
 i = 0   #index: current colour count
@@ -34,7 +36,8 @@ def move(key):
 
     elif key == "Clear":    # c key
         t.reset()
-        #t.shapesize(0.5)  # Cursor size: 0.5 is half of normal
+        t.shape('circle')
+        t.shapesize(0.5)  # Cursor size: 0.5 is half of normal
         t.width(10)
         
     elif key == "Quit":      # q key
