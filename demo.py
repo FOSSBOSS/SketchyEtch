@@ -3,7 +3,7 @@ import turtle
 import time
 import math
 import random
-# There is a chance all of this has to be in raw mode on the pi
+
 #Demo functions for sketch-y-etch
 
 t = turtle.Turtle()
