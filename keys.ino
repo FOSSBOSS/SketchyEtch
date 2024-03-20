@@ -25,14 +25,7 @@ int prevEncoder1Position = 0;
 int prevEncoder2Position = 0;
 
 void setup() {
-  /*
-   * Bounce sets up pins.
-  pinMode(color_Btn, INPUT_PULLUP);
-  pinMode(clear_Btn, INPUT_PULLUP);
-  pinMode(lift_Btn,  INPUT_PULLUP);
-  pinMode(save_Btn,  INPUT_PULLUP);
-  pinMode(demo_Btn,  INPUT_PULLUP);  
-*/
+
   int bounceTime = 5;
   // Attach buttons to Bounce objects and set debounce interval
   colorButton.attach(color_Btn, INPUT_PULLUP);
@@ -88,11 +81,11 @@ void loop() {
 
   // Use encoder direction variables to perform actions
   if (encoder1Direction == -1) {
-    Serial.println("LEFT");
+    //Serial.println("LEFT");
     Keyboard.press(KEY_LEFT_ARROW);
     Keyboard.release(KEY_LEFT_ARROW);
   } else if (encoder1Direction == 1) {
-    Serial.println("RiGHT");
+    //Serial.println("RiGHT");
     Keyboard.press(KEY_RIGHT_ARROW);
     Keyboard.release(KEY_RIGHT_ARROW);
   } else {
@@ -101,12 +94,11 @@ void loop() {
   }
 
   if (encoder2Direction == 1) {
-    Serial.println("UP");
+    //Serial.println("UP");
     Keyboard.press(KEY_UP_ARROW);
     Keyboard.release(KEY_UP_ARROW);
   } else if (encoder2Direction == -1) {
-    //Serial.println("Encoder 2: Negative");
-    Serial.println("DOWN");
+    //Serial.println("DOWN");
     Keyboard.press(KEY_DOWN_ARROW);
     Keyboard.release(KEY_DOWN_ARROW);
   } else {
@@ -117,44 +109,40 @@ void loop() {
   // Handle button presses with debouncing
   colorButton.update();
   if (colorButton.fell()) {
-  //if(digitalRead(color_Btn) == LOW){
-    Serial.println("Color Change");
+    //Serial.println("Color Change");
     Keyboard.press(KEY_G);
     Keyboard.release(KEY_G);
     }
   
   clearButton.update();
   if (clearButton.fell()) {  
-  //if(digitalRead(clear_Btn) == LOW){
-    Serial.println("CLEAR");
+    //Serial.println("CLEAR");
     Keyboard.press(KEY_C);
     Keyboard.release(KEY_C);
     }
   
   liftButton.update();
   if (liftButton.fell()) {  
-  //if(digitalRead(lift_Btn) == LOW){
-    Serial.println("LIFT");
+    //Serial.println("LIFT");
     Keyboard.press(KEY_L);
     Keyboard.release(KEY_L);
     }
   saveButton.update();
   if (saveButton.fell()) {
-  //if(digitalRead(save_Btn) == LOW){
-    Serial.println("Save");
+    Serial.println("Saving file");
     Keyboard.press(KEY_S);
     Keyboard.release(KEY_S);
-    delay(2000); //Really want to prevent spamming this one. 
+    delay(5000); //Really want to prevent spamming this one.
+    Serial.println("Saving Complete"); 
     } 
-/*
+
   demoButton.update();
   if (demoButton.fell()) {
-  //if(digitalRead(demo_Btn) == LOW){
-    Serial.println("D");
-    //Keyboard.press(KEY_D);
-    //Keyboard.release(KEY_D);
+    Serial.println("DEMOLITION");
+    Keyboard.press(KEY_D);
+    Keyboard.release(KEY_D);
     }   
-*/
+/**/
   // Delay to prevent spamming
   delay(70);
 }
