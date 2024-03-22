@@ -7,7 +7,7 @@ Rotary encoders are used to perform XY cordinate based drawing.
 Built on a Raspberry Pi 3B+ using a Teensy 4.1 to gernated keyboard IO. 
 
 Here are some documentation resources I found helpful:
-Turtle Graphics API:
+Turtle Graphics API: <br>
 https://docs.python.org/3/library/turtle.html
 
 How to Autostart Programs in Raspberry Pi OS:
