@@ -14,6 +14,11 @@ How to Autostart Programs in Raspberry Pi OS:
 
 https://www.instructables.com/Autostart-a-Program-When-Raspberry-Pi-Boots-Newbie/
 
-This command may be needed:
+To simply have the program run on boot (on a Pi):
 
 sudo apt install lxsession-default-apps
+
+Unclutter was used to hide the mouse. 
+
+This project should work on any OS, using a keyboard, or sensor IO.
+Only tested on linux though. Good Luck!
