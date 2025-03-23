@@ -1,0 +1,13 @@
+Givent the overwhelming popularity of this prject, and my aquisition of additonal materials, and new expiramentable desgings,
+this prject is going to see a version 2! Very exciting I know!
+
+We are going to take the work from HDMI2C, and expand it to this project.
+That means putting rotary encoders into the HMDI I2C bus, and processing inputs. 
+
+Some other feature ideas:
+background color change.
+vectors
+a GUI config file
+size and shape variants of the pen
+more colours
+acceleration to speed up drawing large images. 
