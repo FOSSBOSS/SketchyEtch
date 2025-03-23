@@ -22,3 +22,10 @@ Unclutter was used to hide the mouse.
 
 This project should work on any OS, using a keyboard, or sensor IO.
 Only tested on linux though. Good Luck!
+
+If you have seen this project live, in person, and wish to fork, or recreate it,
+./fsTurt.py is the python script you care about.
+
+The development of this project took a few itterations to get something working reliably, 
+but the investigation of the various other methods are kept here in.
+Why are things named the way they are? lol idk, made sense at the time.
