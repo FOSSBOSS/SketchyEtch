@@ -9,6 +9,10 @@ import sys
 #import demo
 # Discount Sketch-Y-Etch version for standard keyboard hardware
 # using a teensy for IO, and processing the keypresses.
+def erase():
+    # thinks 0,0 is center in turtle. write 00 to mem
+    #move cursor to 00
+#think I put the core function in demo.py lol
 
 t = turtle.Turtle()
 t.home()
