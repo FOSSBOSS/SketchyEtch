@@ -7,7 +7,13 @@ That means putting rotary encoders into the HMDI I2C bus, and processing inputs.
 Some other feature ideas:
 background color change.
 vectors
-a GUI config file
+a GUI config file?
 size and shape variants of the pen
 more colours
 acceleration to speed up drawing large images. 
+
+I just realized a perk to the new encoders having memory of thier last, (present?) location. It means I can turn the scan rate way down, and keep bandwitch low. 
+
+write a postitional reset into the reset button...
+
+
