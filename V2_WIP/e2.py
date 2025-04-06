@@ -14,26 +14,16 @@ t.width(10)
 # I2C Encoder Stuff
 BYTES = 4
 I2C_BUS = 4        # Change if needed
-I2C_ADDR1 = 0x36
-I2C_ADDR2 = 0x37
+I2C_ADDR1 = 0x36   # X
+I2C_ADDR2 = 0x37   # Y
+I2C_ADDR3 = 0x38   # size
+I2C_ADDR4 = 0x39   # Colour
 SEESAW_ENCODER_BASE = 0x11
 SEESAW_ENCODER_POSITION = 0x30
 SEESAW_ENCODER_DELTA = 0x40
 
-
-# Screen stuff:
-def get_screen_size_turtle():
-    screen = turtle.Screen()
-    width = screen.window_width()
-    height = screen.window_height()
-    return width/2, height/2
-    
-     
-w, h = get_screen_size_turtle()
-print(f"Turtle screen size: {w}x{h}") # w,h, are half of total size as turtle puts 0,0 at center of screen.
-
-
-
+ 
+# HARDWARE FUNCTIONS
 
 def read_register(bus, addr, base, reg, length):
     try:
@@ -68,6 +58,30 @@ def read_encoder_delta(bus):
     data = read_register(bus, SEESAW_ENCODER_BASE, SEESAW_ENCODER_DELTA, I2C_BUS)
     delta = struct.unpack(">i", bytes(data))[0]
     return delta
+# SOFTWARE FUNCTIONS
+# Screen stuff:
+def get_screen_size_turtle():
+    screen = turtle.Screen()
+    width = screen.window_width()
+    height = screen.window_height()
+    return width/2, height/2
+    
+     
+w, h = get_screen_size_turtle()
+print(f"Turtle screen size: {w}x{h}") # w,h, are half of total size as turtle puts 0,0 at center of screen.
+
+
+def erase(bus):   # chan2 
+    write_encoder_position(bus, I2C_ADDR1, 0)
+    write_encoder_position(bus, I2C_ADDR2, 0)
+    t.goto(0,0)
+    t.clear() 
+
+def lift_pen(bus):   # scan ADS1115 for sig chan4
+    if t.isdown():
+        t.penup()
+    else:
+        t.pendown()
 
 if __name__ == "__main__":
     with SMBus(I2C_BUS) as bus:
@@ -75,14 +89,23 @@ if __name__ == "__main__":
             while True:
                 addr_x = read_register(bus, I2C_ADDR1, SEESAW_ENCODER_BASE, SEESAW_ENCODER_POSITION, BYTES)
                 addr_y = read_register(bus, I2C_ADDR2, SEESAW_ENCODER_BASE, SEESAW_ENCODER_POSITION, BYTES)
+                addr_S = read_register(bus, I2C_ADDR3, SEESAW_ENCODER_BASE, SEESAW_ENCODER_POSITION, BYTES)   # pen size
+                addr_C = read_register(bus, I2C_ADDR4, SEESAW_ENCODER_BASE, SEESAW_ENCODER_POSITION, BYTES)   # color
+		
                 X = struct.unpack(">i", bytes(addr_x))[0]
-                Y = struct.unpack(">i", bytes(addr_y))[0]              
-                print(f"X {X}, Y {Y}")
+                Y = struct.unpack(">i", bytes(addr_y))[0]
+                S = struct.unpack(">i", bytes(addr_S))[0]
+                C = struct.unpack(">i", bytes(addr_C))[0]
+		              
+                print(f"X {X}, Y {Y}, Size:{S}, Colour index{C}")
+                t.shapesize(S)
+                t.color(C)
                 t.goto(X,Y)
-                #if X > 40 or Y > 40:   # make this half height /  half width of the screen
-                #    write_encoder_position(bus, I2C_ADDR1, 0)
-                #    write_encoder_position(bus, I2C_ADDR2, 0)
+		# fix this bro
+                if X > 40 or Y > 40:   # move more than 40 out to clear 
+                    erase()
                 sleep(1)
+		# add a read for the pen state here.
         except KeyboardInterrupt:
             print("\nExiting...")
             
@@ -94,6 +117,6 @@ second, memory, they can save the value of where they last were. ... for the ent
     but you can turn the knobs with this program off, and thyell keep storing positional data.
     which is really interesting.
     
-might implement the buttons though I dont anticapte using them. 
+might implement the encoder buttons though I dont anticapte using them. 
 There is also an RGB neopixel on each encoder.
 """
