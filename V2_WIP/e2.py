@@ -4,6 +4,13 @@ import struct
 from time import sleep
 import sys
 import turtle
+
+t = turtle.Turtle()
+t.home()
+t.shape('circle')
+t.shapesize(1)  # Cursor size: 0.5 is half of normal
+t.width(10)
+
 # I2C Encoder Stuff
 BYTES = 4
 I2C_BUS = 4        # Change if needed
@@ -13,15 +20,20 @@ SEESAW_ENCODER_BASE = 0x11
 SEESAW_ENCODER_POSITION = 0x30
 SEESAW_ENCODER_DELTA = 0x40
 
+
 # Screen stuff:
 def get_screen_size_turtle():
     screen = turtle.Screen()
     width = screen.window_width()
     height = screen.window_height()
     return width/2, height/2
+    
      
 w, h = get_screen_size_turtle()
 print(f"Turtle screen size: {w}x{h}") # w,h, are half of total size as turtle puts 0,0 at center of screen.
+
+
+
 
 def read_register(bus, addr, base, reg, length):
     try:
@@ -45,7 +57,7 @@ def write_encoder_position(bus, addr, value):
         bus.i2c_rdwr(write)
     except OSError as e:
         print(f"Failed to write to encoder at address 0x{addr:02X}. Error: {e}")
-        #sys.exit(1) 
+        
 
 def read_encoder_position(bus):
     data = read_register(bus, SEESAW_ENCODER_BASE, SEESAW_ENCODER_POSITION, I2C_BUS)
@@ -66,9 +78,10 @@ if __name__ == "__main__":
                 X = struct.unpack(">i", bytes(addr_x))[0]
                 Y = struct.unpack(">i", bytes(addr_y))[0]              
                 print(f"X {X}, Y {Y}")
-                if X > 40 or Y > 40:   # make this half height /  half width of the screen
-                    write_encoder_position(bus, I2C_ADDR1, 0)
-                    write_encoder_position(bus, I2C_ADDR2, 0)
+                t.goto(X,Y)
+                #if X > 40 or Y > 40:   # make this half height /  half width of the screen
+                #    write_encoder_position(bus, I2C_ADDR1, 0)
+                #    write_encoder_position(bus, I2C_ADDR2, 0)
                 sleep(1)
         except KeyboardInterrupt:
             print("\nExiting...")
