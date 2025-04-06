@@ -83,6 +83,9 @@ def move(key):
     elif key == "Quit":      # q key
         exit()
 '''
+def move(X,Y):
+    
+    
 #toggle though colors 
 def Colour(channel):     # g key
     global i
