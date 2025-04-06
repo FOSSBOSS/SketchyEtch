@@ -11,3 +11,9 @@ a GUI config file
 size and shape variants of the pen
 more colours
 acceleration to speed up drawing large images. 
+
+ ./e2.py 
+X -1, Y -1
+X 0, Y 0
+X 0, Y 0
+X 0, Y 0
