@@ -3,8 +3,22 @@ from smbus2 import SMBus, i2c_msg
 import struct
 from time import sleep
 import sys
+<<<<<<< HEAD
 import turtle
 # I2C Encoder Stuff
+=======
+"""
+The seesaw ecoders have some differences from the encoders used in V1 SketchyEtch:
+first, i2c addresssing
+second, memory, they can save the value of where they last were. ... for the entire time they are powered.
+    removing the device from power, theyll forget thier position.
+    but you can turn the knobs with this program off, and thyell keep storing positional data.
+    which is really interesting.
+    
+might implement the buttons though I dont anticapte using them. 
+There is also an RGB neopixel on each encoder.
+"""
+>>>>>>> e5b12baa7a86e95032f2eb649dd70b8922dff139
 BYTES = 4
 I2C_BUS = 4        # Change if needed
 I2C_ADDR1 = 0x36
@@ -13,6 +27,7 @@ SEESAW_ENCODER_BASE = 0x11
 SEESAW_ENCODER_POSITION = 0x30
 SEESAW_ENCODER_DELTA = 0x40
 
+<<<<<<< HEAD
 # Screen stuff:
 def get_screen_size_turtle():
     screen = turtle.Screen()
@@ -23,6 +38,8 @@ def get_screen_size_turtle():
 w, h = get_screen_size_turtle()
 print(f"Turtle screen size: {w}x{h}") # w,h, are half of total size as turtle puts 0,0 at center of screen.
 
+=======
+>>>>>>> e5b12baa7a86e95032f2eb649dd70b8922dff139
 def read_register(bus, addr, base, reg, length):
     try:
         # Write base + reg
@@ -38,6 +55,7 @@ def read_register(bus, addr, base, reg, length):
         print("Check your Bus and addresses.")
         sys.exit(1)      
 
+<<<<<<< HEAD
 def write_encoder_position(bus, addr, value):
     try:
         data = struct.pack(">i", value)
@@ -47,6 +65,8 @@ def write_encoder_position(bus, addr, value):
         print(f"Failed to write to encoder at address 0x{addr:02X}. Error: {e}")
         #sys.exit(1) 
 
+=======
+>>>>>>> e5b12baa7a86e95032f2eb649dd70b8922dff139
 def read_encoder_position(bus):
     data = read_register(bus, SEESAW_ENCODER_BASE, SEESAW_ENCODER_POSITION, I2C_BUS)
     pos = struct.unpack(">i", bytes(data))[0]
@@ -64,6 +84,7 @@ if __name__ == "__main__":
                 addr_x = read_register(bus, I2C_ADDR1, SEESAW_ENCODER_BASE, SEESAW_ENCODER_POSITION, BYTES)
                 addr_y = read_register(bus, I2C_ADDR2, SEESAW_ENCODER_BASE, SEESAW_ENCODER_POSITION, BYTES)
                 X = struct.unpack(">i", bytes(addr_x))[0]
+<<<<<<< HEAD
                 Y = struct.unpack(">i", bytes(addr_y))[0]              
                 print(f"X {X}, Y {Y}")
                 if X > 40 or Y > 40:   # make this half height /  half width of the screen
@@ -84,3 +105,23 @@ second, memory, they can save the value of where they last were. ... for the ent
 might implement the buttons though I dont anticapte using them. 
 There is also an RGB neopixel on each encoder.
 """
+=======
+                Y = struct.unpack(">i", bytes(addr_y))[0]
+
+                
+                print(f"X {X}, Y {Y}")
+                
+                '''
+                for addr in [I2C_ADDR, I2C_ADDR2]:
+                    data = read_register(bus, addr, SEESAW_ENCODER_BASE, SEESAW_ENCODER_POSITION, BYTES)
+                    pos = struct.unpack(">i", bytes(data))[0]
+                    print(f"Encoder {addr:02X} Position: {pos}")
+
+                #pos = read_encoder_position(bus)
+                #delta = read_encoder_delta(bus)
+                #print(f"Position: {pos}, Delta: {delta}")
+                '''
+                sleep(1)
+        except KeyboardInterrupt:
+            print("\nExiting...")
+>>>>>>> e5b12baa7a86e95032f2eb649dd70b8922dff139

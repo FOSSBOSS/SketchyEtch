@@ -12,8 +12,16 @@ size and shape variants of the pen
 more colours
 acceleration to speed up drawing large images. 
 
+<<<<<<< HEAD
 I just realized a perk to the new encoders having memory of thier last, (present?) location. It means I can turn the scan rate way down, and keep bandwitch low. 
 
 write a postitional reset into the reset button...
 
 
+=======
+ ./e2.py 
+X -1, Y -1
+X 0, Y 0
+X 0, Y 0
+X 0, Y 0
+>>>>>>> e5b12baa7a86e95032f2eb649dd70b8922dff139
