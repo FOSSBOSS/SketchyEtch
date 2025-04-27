@@ -9,7 +9,7 @@
 \maketitle
 
 \begin{abstract}
-Initial versions of the sketch-y-etch had issues related to haphazard planing, and inconsistent use of part. It has been two years since the initial creation filled the Bangor Makerspace with retro drawing for all, and we have heard many things about 
+Initial versions of the sketch-y-etch had issues related to haphazard planing, and inconsistent use of parts. It has been two years since the initial creation filled the Bangor Makerspace with retro drawing for all, and we have heard many things about 
 what makes the sketch-y-etch hard to use. Here in v2, we are going to try an fix the issues. 
 \end{abstract}
 
@@ -20,7 +20,7 @@ what makes the sketch-y-etch hard to use. Here in v2, we are going to try an fix
 	\item \textbf{Stability:} The wobble made drawing difficult. While the Sketch-Y-Etch has never tipped over, it feels like it could—and that can be fixed.
 	\item \textbf{Portability:} Portability was never a design goal of V1 but can be improved in V2.
 	\item \textbf{Documentation:} Existing documentation focused on the history and developer notes but lacked detailed build instructions.
-	\item \textbf{Bill of Materials:} A BOM was non-existent in V1. Not everyone has 30 years of electrical engineering experience and a stockpile of miscellaneous computer parts.
+	\item \textbf{Bill of Materials:} A BOM was non-existent in V1. Not everyone has a stockpile of miscellaneous computer parts.
 \end{itemize}
 
 \section*{Improvements}
@@ -52,7 +52,23 @@ Basic tools required for assembly include:
 
 \subsection*{Electronic Components}
 
-The Bangor Makerspace developed the HDMI-TAP specifically for this project. While its use is highly recommended for simplicity and reliability, you can also build a compatible alternative fairly inexpensively.
+The Bangor Makerspace developed the HDMI-TAP specifically for this project. While its use is highly recommended for simplicity and reliability, it is also possible to build a compatible alternative at relatively low cost.
+
+This project utilizes Qwiic connectors for inter-device communication over I\textsuperscript{2}C.  
+A common practice in electronics is to color-code wires according to their function. Although wire insulation color does not affect circuit operation, following a standard color convention greatly simplifies visual inspection and troubleshooting.
+
+In this project, the following color scheme is used:
+
+\begin{itemize}
+	\item \textbf{Red:} +5VDC (power)
+	\item \textbf{Black:} Ground (common)
+	\item \textbf{Blue:} SDA (I\textsuperscript{2}C data line)
+	\item \textbf{Yellow:} SCL (I\textsuperscript{2}C clock line)
+\end{itemize}
+
+As a mnemonic, you can remember that \textit{yellow} (like a sundial) represents the clock signal.
+
+This color convention matches the standards used by Adafruit STEMMA QT and SparkFun Qwiic connect systems, utilized in this project.
 
 \subsection*{Bill of Materials}
 
@@ -103,7 +119,7 @@ The Sketch-Y-Etch was developed primarily on Linux using Python 3 alongside a va
 While the design should, in principle, work on any operating system, platform-specific nuances have not been extensively tested.  
 The tools listed above reflect the preferences of the original developer. Although not strictly required, they are highly recommended for a smoother and more educational development experience.
 
-\section{References}
+\section*{References}
 
 \begin{itemize}
 	\item Turtle Graphics API (Python Standard Library): \url{https://docs.python.org/3/library/turtle.html}
