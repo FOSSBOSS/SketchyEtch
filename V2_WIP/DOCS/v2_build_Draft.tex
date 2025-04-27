@@ -1,5 +1,5 @@
 \documentclass[]{article}
-
+\usepackage[hidelinks]{hyperref}
 %opening
 \title{Building a better Sketch-Y-Etch}
 \author{Sensored Hacker}
@@ -71,6 +71,48 @@ The Bangor Makerspace developed the HDMI-TAP specifically for this project. Whil
 		\hline
 	\end{tabular}
 \end{center}
+
+\subsection*{Optional Steps}
+
+These steps are not strictly required but are highly recommended to simplify testing and setup.
+
+\begin{enumerate}
+	\item 3D print the \texttt{table.scad} build platform and install your devices onto it.
+	\item Test and verify all hardware and software functionality using the build platform before embedding the electronics into a TV.
+\end{enumerate}
+
+\section*{Recommended Software}
+
+The only essential software requirement for the Sketch-Y-Etch is a working installation of Python 3:
+
+\begin{itemize}
+	\item Python 3: \url{https://www.python.org}
+\end{itemize}
+
+\subsection*{Helpful Tools}
+
+The Sketch-Y-Etch was developed primarily on Linux using Python 3 alongside a variety of additional software tools:
+
+\begin{itemize}
+	\item OpenSCAD (for 3D design): \url{https://openscad.org}
+	\item Geany (lightweight code editor): \url{https://www.geany.org}
+	\item KiCad (PCB design and schematic capture): \url{https://www.kicad.org}
+	\item i2c-tools (I\textsuperscript{2}C communication utilities): \url{https://archive.kernel.org/oldwiki/i2c.wiki.kernel.org/index.php/I2C_Tools.html}
+\end{itemize}
+
+While the design should, in principle, work on any operating system, platform-specific nuances have not been extensively tested.  
+The tools listed above reflect the preferences of the original developer. Although not strictly required, they are highly recommended for a smoother and more educational development experience.
+
+\section{References}
+
+\begin{itemize}
+	\item Turtle Graphics API (Python Standard Library): \url{https://docs.python.org/3/library/turtle.html}
+	\item I\textsuperscript{2}C Implementation Guide (SparkFun): \url{https://learn.sparkfun.com/tutorials/i2c/all}
+	\item Adafruit Seesaw Library: \url{https://github.com/adafruit/Adafruit_Seesaw}
+	\item Component Datasheets: Included in this repository.
+\end{itemize}
+
+All references are provided for educational purposes. They are not required to complete the project but may offer valuable background information.
 
 
 \end{document}
