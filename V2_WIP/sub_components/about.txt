@@ -5,17 +5,15 @@ We are going to take the work from HDMI2C, and expand it to this project.
 That means putting rotary encoders into the HMDI I2C bus, and processing inputs. 
 
 Some other feature ideas:
-background color change.
-vectors
-a GUI config file?
-size and shape variants of the pen
-more colours
-acceleration to speed up drawing large images. 
+More colors!
+change pen size
+dynamic acceleration to speed up drawing large images. 
+new hardware implementation, that remains cross platform compatatble, and distro agnostic.
 
 <<<<<<< HEAD
-I just realized a perk to the new encoders having memory of thier last, (present?) location. It means I can turn the scan rate way down, and keep bandwitch low. 
-
-write a postitional reset into the reset button...
+I just realized a perk to the new encoders having memory of thier last, (present?) location!
+It means I can turn the scan rate way down, and keep bandwitch low, while not needing
+to mess with IRQs and counters. 
 
 
 =======
@@ -24,4 +22,4 @@ X -1, Y -1
 X 0, Y 0
 X 0, Y 0
 X 0, Y 0
->>>>>>> e5b12baa7a86e95032f2eb649dd70b8922dff139
+
