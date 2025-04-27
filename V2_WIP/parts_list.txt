@@ -1,0 +1,9 @@
+encoder: (4x)
+https://www.adafruit.com/product/5880
+
+hdmi breakout: (2x)
+https://www.adafruit.com/product/3121
+
+cables:(5x)**
+https://www.adafruit.com/product/4401
+
