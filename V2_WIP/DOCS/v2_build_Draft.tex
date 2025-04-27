@@ -1,0 +1,76 @@
+\documentclass[]{article}
+
+%opening
+\title{Building a better Sketch-Y-Etch}
+\author{Sensored Hacker}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Initial versions of the sketch-y-etch had issues related to haphazard planing, and inconsistent use of part. It has been two years since the initial creation filled the Bangor Makerspace with retro drawing for all, and we have heard many things about 
+what makes the sketch-y-etch hard to use. Here in v2, we are going to try an fix the issues. 
+\end{abstract}
+
+\section*{ISSUES:}
+\begin{itemize}
+	\item \textbf{Drawing Performance:} Performance was limited by encoder issues.
+	\item \textbf{Build Quality:} V1 used available parts with no specific plan for integration, negatively affecting the overall experience.
+	\item \textbf{Stability:} The wobble made drawing difficult. While the Sketch-Y-Etch has never tipped over, it feels like it could—and that can be fixed.
+	\item \textbf{Portability:} Portability was never a design goal of V1 but can be improved in V2.
+	\item \textbf{Documentation:} Existing documentation focused on the history and developer notes but lacked detailed build instructions.
+	\item \textbf{Bill of Materials:} A BOM was non-existent in V1. Not everyone has 30 years of electrical engineering experience and a stockpile of miscellaneous computer parts.
+\end{itemize}
+
+\section*{Improvements}
+
+\begin{itemize}
+	\item \textbf{Improved Components:} A concerted effort was made to use higher-quality parts throughout the build.
+	\item \textbf{Specialized Hardware:} A new conceptual design in v2 maintains compatibility with a wide range of hardware and platforms, while offering many new design options.
+	\item \textbf{Focused Documentation:} We want you to build your own Sketch-Y-Etch! A detailed tutorial is now available to guide you through the process.
+	\item \textbf{New Features:} More colors, adjustable pen size, dynamic scaling, and additional enhancements.
+	\item \textbf{Bill of Materials:} All required parts can be easily acquired, with a total estimated cost of about \$50.
+\end{itemize}
+
+\section*{Let's Build It!}
+
+To begin building your Sketch-Y-Etch, you will need a set of materials and tools.  
+The Bangor Makerspace offers complete kits for purchase if you are interested, or you can source your own components independently.
+
+\subsection*{Required Tools}
+
+Basic tools required for assembly include:
+\begin{itemize}
+	\item Screwdrivers
+	\item 3D printer
+	\item Wire cutters
+	\item Soldering station
+	\item Drill and drill bits
+	\item Personal protective equipment (PPE)
+\end{itemize}
+
+\subsection*{Electronic Components}
+
+The Bangor Makerspace developed the HDMI-TAP specifically for this project. While its use is highly recommended for simplicity and reliability, you can also build a compatible alternative fairly inexpensively.
+
+\subsection*{Bill of Materials}
+
+\begin{center}
+	\begin{tabular}{|l|l|c|l|}
+		\hline
+		\textbf{Item} & \textbf{Part Number / Name} & \textbf{Qty} & \textbf{Notes} \\
+		\hline
+		Rotary Encoder & Adafruit Seesaw Encoder  & 4 & I2C, with built-in pullups \\
+		Display         & HDMI Monitor             & 1 & Any 1080p-capable screen \\
+		Cables          & Assorted Qwiic Wires      & 5 & Male-male and male-female \\
+		Knobs           & Custom 3D-Printed Knobs   & 1 & STL files available \\
+		Computer        & Any with HDMI Output       & 1 & Laptop, desktop, or SBC \\
+		HDMI-TAP        & v2 w/qwiic connects		&1&  easy access HDMI i2c bus.\\
+		
+		\hline
+	\end{tabular}
+\end{center}
+
+
+\end{document}
