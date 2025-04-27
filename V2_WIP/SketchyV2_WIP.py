@@ -70,7 +70,8 @@ colors = [
     (0.5, 0.5, 0.5), # Gray
     (0.25, 0.25, 0.25) # Dark Gray
 ]
-
+# I added more colours and not it runs terrible lol. ok, well we can probably 
+# improve toggle_color() to not load down the bus so bad. maybe? how lol not sure. 
 
 def read_register(bus, addr, base, reg, length):
     try:
