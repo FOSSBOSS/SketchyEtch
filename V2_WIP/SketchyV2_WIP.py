@@ -47,11 +47,30 @@ SEESAW_ENCODER_DELTA = 0x40
 
 # Pen size control
 PEN_MIN = 1.0
-PEN_MAX = 500.0
-pen_size = 50.0  # Starting pen size
+PEN_MAX = 1000.0
+pen_size = 100.0  # Starting pen size
 
 # Color list
-colors = [(1, 0, 0), (0, 1, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0), (1, 1, 1), (0, 0, 0)]
+#colors = [(1, 0, 0), (0, 1, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0), (1, 1, 1), (0, 0, 0)]
+colors = [
+    (1, 0, 0),    # Red
+    (0, 1, 0),    # Green
+    (0, 0, 1),    # Blue
+    (0, 1, 1),    # Cyan
+    (1, 0, 1),    # Magenta
+    (1, 1, 0),    # Yellow
+    (1, 1, 1),    # White
+    (0, 0, 0),    # Black
+    (0.5, 0, 0),  # Dark Red
+    (0, 0.5, 0),  # Dark Green
+    (0, 0, 0.5),  # Dark Blue
+    (0.5, 0.5, 0),# Olive
+    (0.5, 0, 0.5),# Purple
+    (0, 0.5, 0.5),# Teal
+    (0.5, 0.5, 0.5), # Gray
+    (0.25, 0.25, 0.25) # Dark Gray
+]
+
 
 def read_register(bus, addr, base, reg, length):
     try:
