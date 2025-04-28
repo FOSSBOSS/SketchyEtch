@@ -3,7 +3,7 @@ from smbus2 import SMBus
 import time
 
 # Setup
-I2C_BUS = 4
+I2C_BUS = 1
 I2C_ADDR = 0x48
 CONFIG_REG = 0x01
 CONVERSION_REG = 0x00
@@ -30,11 +30,23 @@ def read_adc(bus, channel):
         value -= 0x10000
     return value
 
+def proc_btns(channel):
+    if channel == 0:
+        print("btn1 presed")
+    if channel == 1:
+        print("btn2 presed")
+    if channel == 2:
+        print("btn3 presed")
+    if channel == 3:
+        print("btn4 presed")
+    
+
 # Main loop
 with SMBus(I2C_BUS) as bus:
     while True:
         for ch in range(4):
             val = read_adc(bus, ch)
-            print(f"AIN{ch}: {val}")
-        print("-" * 20)
-        time.sleep(0.5)
+            if val <= 10:
+                proc_btns(ch)
+
+        time.sleep(0.1)
