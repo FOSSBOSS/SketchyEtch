@@ -2,7 +2,7 @@
 import turtle
 import os
 import time
-import demo
+#import demo
 # Discount Sketch-Y-Etch version for standard keyboard hardware
 # using a teensy for IO, and processing the keypresses.
 
