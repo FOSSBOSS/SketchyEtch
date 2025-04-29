@@ -1,21 +1,7 @@
 #!/usr/bin/env python3
 # Run in your venv. If you can't find it, use vnv
 '''
-using standard i2c libraries, so it should run on anything, 
-without hardware specific GPIO libraries. 
-The seesaw encoders have memory, which is REALLY HELPFUL. 
-This means you can read the encoders whenever and not have to constantly listen with IRQs.
-it also saves me a step in having to listen for events and count steps, which should prevent
-memory related issues present in version 1.
-
-Current hardware expenses: 
-HDMI Tap: 6$
-4 seesaw rotoray encoders 8$*4 =32$
-filament, wire and misc ~4$?
-cost 42$
-could be less if someone made an actual kit, and knew what they were doing when designing this thing.
-
-Enjoy!
+https://docs.python.org/3/library/turtle.html
 '''
 
 import turtle
@@ -29,7 +15,7 @@ import sys
 t = turtle.Turtle()
 t.home()
 t.shape('circle')
-t.shapesize(0.5)  # Cursor size: 0.5 is half of normal
+t.shapesize(1)  # Cursor size: 0.5 is half of normal
 t.width(10)
 t.speed(0)  # Fastest drawing speed
 
@@ -45,13 +31,39 @@ SEESAW_ENCODER_BASE = 0x11
 SEESAW_ENCODER_POSITION = 0x30
 SEESAW_ENCODER_DELTA = 0x40
 
+### ADC setup
+I2C_ADDR = 0x48
+CONFIG_REG = 0x01
+CONVERSION_REG = 0x00
+
+# MUX values for AIN0–AIN3
+MUX = [0x4000, 0x5000, 0x6000, 0x7000]
+
+# Base config:
+# - OS=1 (start single conversion)
+# - PGA=±4.096V
+# - MODE=single-shot
+# - DR=128SPS
+# - Comparator disabled
+BASE_CONFIG = 0x8000 | 0x0200 | 0x0100 | 0x0080 | 0x0003
+
+def read_adc(bus, channel):
+    config = BASE_CONFIG | MUX[channel]
+    config_bytes = [(config >> 8) & 0xFF, config & 0xFF]
+    bus.write_i2c_block_data(I2C_ADDR, CONFIG_REG, config_bytes)
+    sleep(0.1)
+    raw = bus.read_i2c_block_data(I2C_ADDR, CONVERSION_REG, 2)
+    value = (raw[0] << 8) | raw[1]
+    if value > 0x7FFF:
+        value -= 0x10000
+    return value
+
 # Pen size control
 PEN_MIN = 1.0
 PEN_MAX = 1000.0
 pen_size = 100.0  # Starting pen size
 
 # Color list
-#colors = [(1, 0, 0), (0, 1, 0), (0, 0, 1), (0, 1, 1), (1, 0, 1), (1, 1, 0), (1, 1, 1), (0, 0, 0)]
 colors = [
     (1, 0, 0),    # Red
     (0, 1, 0),    # Green
@@ -70,8 +82,13 @@ colors = [
     (0.5, 0.5, 0.5), # Gray
     (0.25, 0.25, 0.25) # Dark Gray
 ]
-# I added more colours and not it runs terrible lol. ok, well we can probably 
-# improve toggle_color() to not load down the bus so bad. maybe? how lol not sure. 
+# added more colours(from 8 to 16), then it got real slow. 
+# probably have to be smarter about how toggle_color() runs
+
+def findBus():
+    ''' ok the bus will probably have 4 encoders between 0x36 and 0x3D if you put  you addresses in a contiguous pattern, then finding them will be a breeze  '''
+    sleep(1)
+
 
 def read_register(bus, addr, base, reg, length):
     try:
@@ -119,6 +136,11 @@ def erase(bus):
     t.goto(0, 0)
     t.pendown()      
 
+def lift_pen(bus):
+    if i.isdown():
+        t.penup()
+    else:
+        t.pendown()
 
 def adjust_pen_size(bus):
     global pen_size
@@ -127,7 +149,8 @@ def adjust_pen_size(bus):
         pen_size += delta #* 0.1  # Scale down change
         pen_size = max(PEN_MIN, min(PEN_MAX, pen_size))  # Clamp
         t.width(pen_size)
-        print(f"Pen size adjusted to: {pen_size:.1f}")
+        
+        #print(f"Pen size adjusted to: {pen_size:.1f}")
 
 def toggle_color(bus):
     global i
@@ -135,61 +158,62 @@ def toggle_color(bus):
     if delta != 0:
         i += delta
         t.pencolor(colors[i % len(colors)])
-        print(f"Color changed to: {colors[i % len(colors)]}")
+        #print(f"Color changed to: {colors[i % len(colors)]}")
+	# yeah we call it toggle, but it is an encoder now
 
 def move_turtle(bus):
     x = read_encoder_position(bus, I2C_ADDR_X)
     y = read_encoder_position(bus, I2C_ADDR_Y)
-    # Scale encoder values down because they are too large for the screen or use a giant TV lol
-    t.goto(x / 0.1, y / 0.1) # maybe make a dynamic speed function, or add another encoder?
+    #print(f"x:{x} y:{y}")
+    t.goto(x * xscale, y * yscale) # maybe make a dynamic speed function, or add another encoder?
+
+def proc_btns(channel):
+    # sure its hacky but its simple.
+    if channel == 0:
+        erase(bus)
+        #print("btn1 presed")
+    if channel == 1:
+        lift_pen(bus)
+        print("btn2 presed")
+    '''
+    if channel == 2:
+        print("btn3 presed")
+    if channel == 3:
+        print("btn4 presed")
+    '''	
+
 
 # Turtle screen setup
 screen = turtle.Screen()
-screen.setup(width=1.0, height=1.0)  # 1,1 = Full screen 
+width = screen.window_width()
+height = screen.window_height() 
+screen.setup(width=0.5, height=0.5)  # 1,1 = Full screen 
 canvas = screen.getcanvas()
 root = canvas.winfo_toplevel()
 root.overrideredirect(1)  # Hide window borders
+
+## performance tuning
+xscale = 10
+yscale = 10
+
 
 # Main loop
 with SMBus(I2C_BUS_NUM) as bus:
     try:
         erase(bus)  # Start fresh
         while True:
+            for ch in range(2):
+                val = read_adc(bus, ch)
+                if val <= 10:
+                    proc_btns(ch)
             move_turtle(bus)
             adjust_pen_size(bus)
             toggle_color(bus)
-            sleep(0.05)
+            sleep(0.05) # 50 ms run loop. how much bandwdith is that.?
     except KeyboardInterrupt:
         print("Exiting program.")
         sys.exit(0)
 
 screen.mainloop()
-'''
-dev notes:
-Raspberry pi does something weird on the i2c bus / HDMI. You can however run this on a pi, 
-as is, though you will have to find the right bus, probably, i2c-1
-broken out from the GPIO header. but you wont have to import any GPIO hardware specific libraries.
-you just wont be able to use the HDMI in line breakout addapter. Im still figuring out why that is. 
-allegdedly, it is possbile, from online reading / official docs, but from bus analyis I see no evidence.
-it appears that the video i2c bus is broken out to the GPIO header. Once you do that, it seems to work.
 
-Todo:
-write a hardware check for the HMDI hotplug to automagicaly detect bus number.
-right now it is manualy assigned. 
 
-write an OS detection function 
-
-add buttons for clear, might just use encoder buttons. was thinking about adding an ADC to handle buttons. but tryna keep hardware costs low.
-
-** Write other programs for this hardware platform. Many possibilities. 
-
-############ Some other feature ideas: #########
-background color change.
-vectors
-a config file
-size and shape variants of the pen
-more colours
-acceleration to speed up drawing large images. 
-N size screen detect N size / step ratio to give a relative drawing expirience independent of screen size.
-
-'''
