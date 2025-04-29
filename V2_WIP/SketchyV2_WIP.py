@@ -137,7 +137,7 @@ def erase(bus):
     t.pendown()      
 
 def lift_pen(bus):
-    if i.isdown():
+    if t.isdown():
         t.penup()
     else:
         t.pendown()
@@ -174,7 +174,7 @@ def proc_btns(channel):
         #print("btn1 presed")
     if channel == 1:
         lift_pen(bus)
-        print("btn2 presed")
+        #print("btn2 presed")
     '''
     if channel == 2:
         print("btn3 presed")
