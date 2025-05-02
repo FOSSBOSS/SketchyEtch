@@ -126,9 +126,9 @@ This project has many possible configurations. Here are two basic setups you mig
 
 Many possibilities and functionalities exist at this stage. The zeitgeist of this project is to embrace experimentation, and creativity with flexibility. Take some time to consider how you want to configure your Sketch-Y-Etch.
 
-While video pass-through is an option, if you have multiple display outputs, you may route your controls in various ways. You might choose to embed the Sketch-Y-Etch into a TV, build a standalone control panel, make multiple controllers on one computer, use a projector, or simply connect via a laptop using HDMI as a control bus only.\\
+While video pass-through is an option, if you have multiple display outputs, you may route your controls in various ways. You might choose to embed the Sketch-Y-Etch into a TV, build a standalone control panel, make multiple controllers on one computer, use a projector, or simply connect via a laptop using HDMI as a control bus only.
 
-Is HDMI strictly required? Not necessarily. HDMI is modern and widely available, but it is not the only option. Other video or data interfaces could be adapted with additional development effort. Adaptions may change the path of these instructions, which should conceptually work regardless of your desired implementations. I am however not going to write a new tutorial for every conceivable build path, or video technology in existence. \\
+Is HDMI strictly required? Not necessarily. HDMI is modern and widely available, but it is not the only option. Other video or data interfaces could be adapted with additional development effort. Adaptions may change the path of these instructions, which should conceptually work regardless of your desired implementations. I am however not going to write a new tutorial for every conceivable build path, or video technology in existence. 
 
 Please keep in mind: this project remains experimental. It is not intended as a polished, professional consumer product.  
 While it is feasible to create a more plug-and-play experience, the practical setup will depend heavily on the specific hardware you have available.
@@ -168,8 +168,14 @@ Please note that whichever addresses you assign must be configured correctly in 
 	\end{figure}
 
 Once you have assigned your 4 distinct addresses by soldering, record those addresses, and their respective functions per your board layout. You will need this information when you go to adapt the SketchyEtch.py code to your specific installation.
+The findbus function will search for your 4 encoders, when the program loads. If you set your encoder addresses to something other than 0x36,0x37,0x38,0x39, you will need to change the known\_addrs values to reflect the values you have set. 
+The specific encoder addresses also control which encoder controls what Sketch-Y-Etch function. 
 
-\section*{More wiring}
+% probably change this in code, to be one set of variable assignments.
+
+\section*{More wiring} I used an ADS115 Analog to Digital Converter (ADC) to add 4 buttons to this project. Its wild overkill for the project, but Im going to build other projects with that part, so I wanted to figure out the logic for it anyway.
+As in using it was educational for me. For you, this part is cheap, and readily available. The logic of using the ADC is also flexible, and exceedingly simple once you have the code to listen to the device set up. If a button normally tied high, goes low, perform a function. 
+How does that work? I used 4, 10K ohm resistors tied to +5VDC to the "A" inputs of the ADC, and the normally open switch tied to ground. when the button is pressed, the voltage on the input goes low. This is not a short circuit, because of the resistor. So then our code sees a low value on the channel where the button was pressed, and we respond accordingly by calling a function.  
 
 
 
@@ -198,13 +204,21 @@ If you start to smell something, or your computer begins to behave erratically, 
 \section*{Play Time!}
 
 \section*{Troubleshooting}
+\subsection{No video:} If you ran the solitary signal ground though the qwiic connectors, a disconnect on any of the encoders could prevent video pass thru.\\Check your sensors, and encoders. The kit version should not be as susceptible to this issue.
+The i2c bus is not strictly required by the HDMI video connection, its use is in identifying connected devices. The signal ground however is required for the video signals. You could add a ground cable, or just check your wiring. 
+\subsection{Flashy Flashy:} flickering, or stuttering can occur when the Hot Plug Detect is wired straight through, and or not tied to the +5VDC line. The GPU, or video device is basicly always searching for, and confirming the eeprom of the attached screen, TV, projector etc. When the detection is confirmed, the device sends a signal in the form of +5VDC to the video driver verifying the connection. If the HPD passes straight through, your screen will flicker at the rate of the polling. Tying the HPD high prevents the flicker, but does not stop the polling. Again, check your wiring.
+\subsection{screen tearing:} Depending on the size of your screen and the computer you use to supply video, you could run out of video memory. This is exceedingly close on screens larger than 52 inches on devices like the raspberry pi which do not have a lot of video memory.
+\subsection{Video output issues:} try removing the pass through. custom connections may be wired incorrectly. \\
 
 \section*{Contact}
 \begin{enumerate}
 \item You love this project, and want to contribute!
 \item You have commentary about this document, project, code and want further detail.
-\item Complaints.
+\item Complaints. This project sucks! Believe me, I KNOW. With a wanton disregard for more performant hardware, and methods I bravely undertook this project despite the stern remarks from veteran Electrical Engineers and programmers alike. Don't tell me how to have fun!
 \end{enumerate}
+
+
+
 \section*{Recommended Software}
 
 The only essential software requirement for the Sketch-Y-Etch is a working installation of Python 3:
@@ -212,6 +226,30 @@ The only essential software requirement for the Sketch-Y-Etch is a working insta
 \begin{itemize}
 	\item Python 3: \url{https://www.python.org}
 \end{itemize}
+
+\section*{Nobody asked:}
+\subsection{I2C bus topologies:}
+Venturing into the realm of TMI, learning about I2C bus topologies can give you insight into various ways you can build future projects. 
+
+\subsection{i2c Sucks!} Well, yeah, kinda.
+\begin{itemize}
+	\item \textbf{Very Slow}: Typical speeds are \textbf{100 kHz}, to maybe \textbf{400 kHz}
+	\item \textbf{Short Distance}: Designed for communication across a single PCB or a few inches of wire. Beyond $\sim$1 meter, signal integrity issues like reflections, capacitance, and noise become problematic.
+	\item \textbf{Shared Bus = Traffic Jams}: All devices share the same two wires (SDA and SCL). A slow or malfunctioning device can stall the entire bus.
+	\item \textbf{Limited Error Handling}: Only basic ACK/NACK mechanisms are provided; no robust error correction or retry protocols.
+	\item \textbf{Limited Bandwidth}: As a shared bus, more devices mean reduced effective performance.
+	\item \textbf{Requires Pull-Up Resistors}: Since I\textsuperscript{2}C uses an open-drain configuration, pull-up resistors are needed, leading to:
+	\begin{itemize}
+		\item Slow signal rise times
+		\item Higher active power consumption
+		\item Sensitivity to wiring quality and length
+	\end{itemize}
+\end{itemize} 
+But its also easy to implement, as I hope this project shows, and devices using it are prevalent. 
+
+\section{Aversions to hardware hacking:} yes we took a devices and modified its normal operation to garner our own distinct operation. I've heard all manner or cries about the feasibility of interrupting the I2C bus on a video port. I have news for you: while the typical operation is to use video output devices to communicate with internal memory of screens, and TVs and projectors, a wide array of devices also interrupt the I2C bus to garner their own functionality. So one, this operation is not all so outlandish. Further still, any given I2C buss can communicate with up to 127 devices, and the typical utilization is just using 1. The same folks screaming about interrupting the i2c bus have no problem with a 20 foot long HDMI cable which subjects the circuit to the same sorts of noises and losses.  
+
+
 
 \subsection*{Helpful Tools}
 
@@ -240,6 +278,9 @@ The tools listed above reflect the preferences of the original developer. Althou
 \end{itemize}
 
 All references are provided for educational purposes. They are not required to complete the project but may offer valuable background information.
+
+\section*{burgeons:}
+A fun side project is to modify your TV, projector, or screen to report its identity as a Sketch-Y-Etch, or whatever you want I suppose. But this is a topic for a different discussion.  
 
 
 \end{document}
