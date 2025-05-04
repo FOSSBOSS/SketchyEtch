@@ -34,6 +34,51 @@ what makes the sketch-y-etch hard to use. Here in v2, we are going to try an fix
 	\item \textbf{Bill of Materials:} All required parts can be easily acquired, with a total estimated cost of about \$50.
 \end{itemize}
 
+\section*{Recommended Software}
+
+The only essential software requirement for the Sketch-Y-Etch is a working installation of Python 3:
+\begin{itemize}
+	\item Python 3: \url{https://www.python.org}
+\end{itemize}
+You will also need the \texttt{numpy} and \texttt{smbus2} libraries, which can be installed with:
+
+\begin{verbatim}
+	pip install numpy smbus2
+\end{verbatim}
+
+
+
+
+\section*{Download the Code}
+Download the source repository for the Sketch-Y-Etch project, available at:  
+\url{https://github.com/FOSSBOSS/SketchyEtch}
+
+Once you have the repository, extract it if necessary, and navigate to the \texttt{v2\_WIP} folder.  
+In your IDE of choice, try running \texttt{SketchyV2\_WIP.py}.
+
+If you encounter import errors, you may be missing required libraries, or your Python 3 path may be incorrect.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.8\textwidth]{missing.png}
+	\caption{Missing \texttt{smbus2} library error example.}
+	\label{fig:missing_smbus2}
+\end{figure}
+
+Sketch-Y-Etch app keys:
+\begin{itemize}
+	\item Arrow keys: Left Right, Up, Down, moves the pen respectively.
+	\item c, clears the screen.
+	\item g, get a new color. Press it until you find what you want.
+	\item l, lift pen. press again to set pen down.
+	\item s, save your work. 
+	\item q, quit, close the program.
+%	\item more buttons on the way  
+\end{itemize}
+
+If you are choosing to use the Sketch-Y-Etch software for fun drawing, without building a whole thematic retro electronics installation, then you can stop reading now. 
+Else: continue.
+
 \section*{Let's Build It!}
 
 To begin building your Sketch-Y-Etch, you will need a set of materials and tools.  
@@ -78,12 +123,13 @@ This color convention matches the standards used by Adafruit STEMMA QT and Spark
 		\hline
 		\textbf{Item} & \textbf{Part Number / Name} & \textbf{Qty} & \textbf{Notes} \\
 		\hline
-		Rotary Encoder & Adafruit Seesaw Encoder   & 4 & I2C, with built-in pullups \\
+		Rotary Encoder & Adafruit Seesaw Encoder   & 4 & I2C, with built-in pull ups \\
 		Display        & HDMI Monitor              & 1 & Any 1080p-capable screen \\
 		Cables         & Assorted Qwiic Wires      & 5 & Male-male and male-female \\
 		Knobs          & Custom 3D-Printed Knobs   & 1 & STL files available \\
 		Computer       & Any with HDMI Output      & 1 & Laptop, desktop, or SBC \\
 		HDMI-TAP       & v2 w/qwiic connects	   & 1 &  easy access HDMI i2c bus.\\
+		Optional	   & I2C bus splitter	       & 1 & can make routing easier.\\
 		
 		\hline
 	\end{tabular}
@@ -91,29 +137,12 @@ This color convention matches the standards used by Adafruit STEMMA QT and Spark
 
 
 
-\section*{Download the Code}
 
-If you have not yet installed Python 3, download and install it now.  
-You will also need the \texttt{numpy} and \texttt{smbus2} libraries, which can be installed with:
 
-\begin{verbatim}
-	pip install numpy smbus2
-\end{verbatim}
+\section*{Install Hardware}
+% dont forget to write about the ADC!
+The Sketch-Y-Etch application will run on Any platform where python3 is installed. Windows, Mac, or Linux, Arm, i686, x86\_64 .... it can run on any standard PC hardware. If you just want to draw, and don't care about making it look cool, can skip this step, and the steps below.
 
-Download the source repository for the Sketch-Y-Etch project, available at:  
-\url{https://github.com/FOSSBOSS/SketchyEtch}
-
-Once you have the repository, extract it if necessary, and navigate to the \texttt{v2\_WIP} folder.  
-In your IDE of choice, try running \texttt{SketchyV2\_WIP.py}.
-
-If you encounter import errors, you may be missing required libraries, or your Python 3 path may be incorrect.
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.8\textwidth]{missing.png}
-	\caption{Missing \texttt{smbus2} library error example.}
-	\label{fig:missing_smbus2}
-\end{figure}
 
 \section*{Embrace Complexity}
 
@@ -126,13 +155,13 @@ This project has many possible configurations. Here are two basic setups you mig
 
 Many possibilities and functionalities exist at this stage. The zeitgeist of this project is to embrace experimentation, and creativity with flexibility. Take some time to consider how you want to configure your Sketch-Y-Etch.
 
-While video pass-through is an option, if you have multiple display outputs, you may route your controls in various ways. You might choose to embed the Sketch-Y-Etch into a TV, build a standalone control panel, make multiple controllers on one computer, use a projector, or simply connect via a laptop using HDMI as a control bus only.
+While video pass-through is an option, if you have multiple display outputs, you may route your controls in various ways. You might choose to embed the Sketch-Y-Etch into a TV, build a standalone control panel, make multiple controllers on one computer, use a projector, or simply run the app on your computer without specialized electronics.
 
 Is HDMI strictly required? Not necessarily. HDMI is modern and widely available, but it is not the only option. Other video or data interfaces could be adapted with additional development effort. Adaptions may change the path of these instructions, which should conceptually work regardless of your desired implementations. I am however not going to write a new tutorial for every conceivable build path, or video technology in existence. 
 
 Please keep in mind: this project remains experimental. It is not intended as a polished, professional consumer product.  
 While it is feasible to create a more plug-and-play experience, the practical setup will depend heavily on the specific hardware you have available.
-This flexibility can be confusing at first, but the key is to clearly define what you want to build before you start building it.
+This flexibility can be confusing, the key is to clearly define what you want to build before you start building it.
 
 \subsection*{Optional Steps}
 
@@ -143,11 +172,12 @@ These steps are not strictly required but are highly recommended to simplify tes
 	\item Drill or melt holes into the table  to match your layout preferences. 
 	\item Install the knobs by pushing them on to the encoder shafts. Using alternate knobs is also acceptable, we're just trying to make the encoders easy to use.
 	\item Test and verify all hardware and software functionality using the build platform before embedding the electronics into a TV.
+	\item If embedding a computer into an other device, its a good idea to have an easy means of access. Ssh, wireless keyboard, or leave the covers off until you are sure everything is running properly. 
 \end{enumerate}
 
 \section*{Wiring}
 Assuming you are following along with building the test platform first for testing, and your 4 rotary encoders are now installed, flip the table to view the encoders for wiring.
-The encoders have directionality, which may be counter intuitive. There is an input side, and an output side. If looking at the underside of the encoder, with the LED at the top, or away from you, the input port is on the left, and the output qwiic connect port is on the right. You may opt to label the ports I for input and O for output. When connecting the encoders, you will connect from the output of the first encoder to the input of the next encoder in line. 
+The encoders have directionality, which may be counter intuitive, and limited a specific models. There is an input side, and an output side. If looking at the underside of the encoder, with the LED at the top, or away from you, the input port is on the left, and the output Qwiic connect port is on the right. You may opt to label the ports I for input and O for output. When connecting the encoders, you will connect from the output of the first encoder to the input of the next encoder in line. 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.8\textwidth]{underside.png}
@@ -169,7 +199,7 @@ Please note that whichever addresses you assign must be configured correctly in 
 
 Once you have assigned your 4 distinct addresses by soldering, record those addresses, and their respective functions per your board layout. You will need this information when you go to adapt the SketchyEtch.py code to your specific installation.
 The findbus function will search for your 4 encoders, when the program loads. If you set your encoder addresses to something other than 0x36,0x37,0x38,0x39, you will need to change the known\_addrs values to reflect the values you have set. 
-The specific encoder addresses also control which encoder controls what Sketch-Y-Etch function. 
+The specific encoder addresses also control which encoder controls what Sketch-Y-Etch function. If in the code the findbus function does not find your encoders, the Sketch-Y-Etch program will default to using a keyboard for drawing. Depending on your project construction, this may be a problem. If your computer is embedded into your tv, or projector, and attaching a keyboard is difficult, then be sure to configure the known\_addrs before hand.  The sketch-y-etch program does not continuously scan for known addresses, rather is only scans during initialization. 
 
 % probably change this in code, to be one set of variable assignments.
 
@@ -195,8 +225,7 @@ Did your externally attach monitor resume video playback? Did the power lights o
 If every thing seems to be working, then lets proceed. 
 If you start to smell something, or your computer begins to behave erratically, I would suspect the newly attached experimental electronics project, and unplug it as best practice. 
  
-\section*{Install Hardware}
-% dont forget to write about the ADC!
+
 \section*{Test Hardware}
 
 \section*{Adapt the code}
@@ -206,7 +235,7 @@ If you start to smell something, or your computer begins to behave erratically, 
 \section*{Troubleshooting}
 \subsection{No video:} If you ran the solitary signal ground though the qwiic connectors, a disconnect on any of the encoders could prevent video pass thru.\\Check your sensors, and encoders. The kit version should not be as susceptible to this issue.
 The i2c bus is not strictly required by the HDMI video connection, its use is in identifying connected devices. The signal ground however is required for the video signals. You could add a ground cable, or just check your wiring. 
-\subsection{Flashy Flashy:} flickering, or stuttering can occur when the Hot Plug Detect is wired straight through, and or not tied to the +5VDC line. The GPU, or video device is basicly always searching for, and confirming the eeprom of the attached screen, TV, projector etc. When the detection is confirmed, the device sends a signal in the form of +5VDC to the video driver verifying the connection. If the HPD passes straight through, your screen will flicker at the rate of the polling. Tying the HPD high prevents the flicker, but does not stop the polling. Again, check your wiring.
+\subsection{Flashy Flashy:} flickering, or stuttering can occur when the Hot Plug Detect is wired straight through, and or not tied to the +5VDC line. The GPU, or video device is basically always searching for, and confirming the eeprom of the attached screen, TV, projector etc. When the detection is confirmed, the device sends a signal in the form of +5VDC to the video driver verifying the connection. If the HPD passes straight through, your screen will flicker at the rate of the polling. Tying the HPD high prevents the flicker, but does not stop the polling. Again, check your wiring.
 \subsection{screen tearing:} Depending on the size of your screen and the computer you use to supply video, you could run out of video memory. This is exceedingly close on screens larger than 52 inches on devices like the raspberry pi which do not have a lot of video memory.
 \subsection{Video output issues:} try removing the pass through. custom connections may be wired incorrectly. \\
 
@@ -219,13 +248,7 @@ The i2c bus is not strictly required by the HDMI video connection, its use is in
 
 
 
-\section*{Recommended Software}
 
-The only essential software requirement for the Sketch-Y-Etch is a working installation of Python 3:
-
-\begin{itemize}
-	\item Python 3: \url{https://www.python.org}
-\end{itemize}
 
 \section*{Nobody asked:}
 \subsection{I2C bus topologies:}
@@ -271,9 +294,9 @@ The tools listed above reflect the preferences of the original developer. Althou
 	\item Turtle Graphics API (Python Standard Library): \url{https://docs.python.org/3/library/turtle.html}
 	\item Smbus2 (Python I\textsuperscript{2}C library) : \url{https://pypi.org/project/smbus2}
 	\item I\textsuperscript{2}C Implementation Guide (SparkFun): \url{https://learn.sparkfun.com/tutorials/i2c/all}
-	\item Adafruit encoder pinouts \url{https://learn.adafruit.com/adafruit-i2c-qt-rotary-encoder/pinouts}
+	\item Adafruit encoder pin outs \url{https://learn.adafruit.com/adafruit-i2c-qt-rotary-encoder/pinouts}
 	\item Adafruit Seesaw Library: \url{https://github.com/adafruit/Adafruit_Seesaw}
-	\item Component Datasheets: Included in this repository.
+	\item Component Data sheets: Included in this repository.
 	\item The Book of I\textsuperscript{2}C by Randal Hyde \url{https://nostarch.com/book-i%C2%B2c}
 \end{itemize}
 

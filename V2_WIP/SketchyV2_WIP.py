@@ -18,6 +18,54 @@ t.shape('circle')
 t.shapesize(1)  # Cursor size: 0.5 is half of normal
 #t.width(10)
 t.speed(0)  # Fastest drawing speed
+# conditional: if i2c bus devices not found, use keyboard
+def use_Keyboard():
+    '''
+    arrows do arrow stuf
+    c clear
+    q quit
+    g get a new color
+    l lift pen
+    s save
+    
+    '''
+    
+    def move(key):
+        x = t.xcor()
+        y = t.ycor()
+        screen.title(f"X: {t.xcor()}, Y: {t.ycor()}")
+        if key == "Up":
+            y += 10
+            t.goto(x, y )
+
+        elif key == "Down":
+            y -= 10
+            t.goto(x, y )
+
+        elif key == "Left":
+            x -= 10
+            t.goto(x, y)
+
+        elif key == "Right":
+            x += 10
+            t.goto(x, y)
+
+        elif key == "Clear":    # c key
+            t.reset()
+            t.shape('circle')
+            t.shapesize(0.5)  # Cursor size: 0.5 is half of normal
+            t.width(10)
+    
+    screen.onkeypress(lambda: move("Up"), "Up")
+    screen.onkeypress(lambda: move("Down"), "Down")
+    screen.onkeypress(lambda: move("Left"), "Left")
+    screen.onkeypress(lambda: move("Right"), "Right")
+    screen.onkeypress(lambda: move("Clear"), "c")  # why did I put clear in the move function? lol IDK
+
+
+
+
+
 
 # look for the bus with your known addresses
 I2C_BUS_NUM = 0
@@ -32,7 +80,8 @@ def findbus():
                     if all(_device_present(bus, addr) for addr in known_addrs):
                         return bus_num
             except Exception:
-                continue
+                use_Keyboard()
+                continue # if i2c devices not found, use keyboard functions
     return None
 
 def _device_present(bus, addr):
@@ -187,7 +236,7 @@ def toggle_color(bus):
         i += delta
         t.pencolor(colors[i % len(colors)])
         #print(f"Color changed to: {colors[i % len(colors)]}")
-	# yeah we call it toggle, but it is an encoder now
+        # yeah we call it toggle, but it is an encoder now
 
 def move_turtle(bus):
     x = read_encoder_position(bus, I2C_ADDR_X)
@@ -215,10 +264,10 @@ def proc_btns(channel):
     '''
     if channel == 3:
         # make a save function
-	save()
-	sleep(3) # no spam
+        save()
+        sleep(3) # no spam
         print("btn4 presed")
-    '''	
+    ''' 
 
 
 # Turtle screen setup
