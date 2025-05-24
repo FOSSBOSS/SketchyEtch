@@ -1,0 +1,5 @@
+well, Im not even sure how this will work, but im going to try making a sketchy etch version that can write openscad files.
+
+I'd tested the concept a few days ago. The basic method is to use python to write the scad code, and pyautogui to send the F5 command to openscad
+so that the image renders.
+Openscad is pretty jank, but its the simplest avenue I know of.
