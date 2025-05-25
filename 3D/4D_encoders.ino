@@ -54,9 +54,9 @@ void loop() {
      int32_t new_position = encoders[enc].getEncoderPosition();
      // did we move around?
      if (encoder_positions[enc] != new_position) {
-       Serial.printf("E1: %ld, E2: %ld, E3: %ld, E4: %ld\n",encoders[0],encoders[1],encoders[2],encoders[3]);
-       Serial.println(new_position);         // display new position
-       encoder_positions[enc] = new_position;
+      // Serial.printf("E1: %ld, E2: %ld, E3: %ld, E4: %ld\n",encoders[0],encoders[1],encoders[2],encoders[3]); // mem addrs lol
+       encoder_positions[enc] = new_position;  // new position to list
+       Serial.printf("E1: %ld, E2: %ld, E3: %ld, E4: %ld\n", encoder_positions[0],encoder_positions[1],encoder_positions[2],encoder_positions[3]);      
      }
 
      if (! encoders[enc].digitalRead(SS_SWITCH)) {
