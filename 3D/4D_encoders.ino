@@ -1,14 +1,18 @@
 
 #include <Wire.h>
 #include "Adafruit_seesaw.h"
-#include <seesaw_neopixel.h>
+//#include <seesaw_neopixel.h>
 #include <Keyboard.h>
-/*example code with neopixels purged, and teensy printf statments added*/
+
+/*Tenative idea is to have X,Y,Z, and view select*/
 
 #define SS_SWITCH        24      // this is the pin on the encoder connected to switch
 #define SEESAW_BASE_ADDR          0x36  // I2C address, starts with 0x36
 
 Adafruit_seesaw encoders[4];
+
+unsigned long btn_press[4] = {0, 0, 0, 0};
+const unsigned long dbd = 200; // deBouce delay = 100 ms
 
 int32_t encoder_positions[] = {0, 0, 0, 0};
 bool found_encoders[] = {false, false, false, false};
@@ -29,7 +33,7 @@ for (uint8_t enc = 0; enc < sizeof(found_encoders); enc++) {
   } else {
     encoders[enc].pinMode(SS_SWITCH, INPUT_PULLUP);
 
-    // set encoder to 0
+    // Reset encoder to 0
     encoders[enc].setEncoderPosition(0);
     encoder_positions[enc] = 0;
 
@@ -48,23 +52,29 @@ for (uint8_t enc = 0; enc < sizeof(found_encoders); enc++) {
 }
 
 void loop() {
+unsigned long now = millis(); 
   for (uint8_t enc=0; enc<sizeof(found_encoders); enc++) {
      if (found_encoders[enc] == false) continue;
 
      int32_t new_position = encoders[enc].getEncoderPosition();
      // did we move around?
      if (encoder_positions[enc] != new_position) {
-      // Serial.printf("E1: %ld, E2: %ld, E3: %ld, E4: %ld\n",encoders[0],encoders[1],encoders[2],encoders[3]); // mem addrs lol
-       encoder_positions[enc] = new_position;  // new position to list
-       Serial.printf("E1: %ld, E2: %ld, E3: %ld, E4: %ld\n", encoder_positions[0],encoder_positions[1],encoder_positions[2],encoder_positions[3]);      
+      encoder_positions[enc] = new_position; // update position before printing
+      Serial.printf("E1: %ld, E2: %ld, E3: %ld, E4: %ld\n", encoder_positions[0],encoder_positions[1],encoder_positions[2],encoder_positions[3]);      
      }
 
-     if (! encoders[enc].digitalRead(SS_SWITCH)) {
+     if (! encoders[enc].digitalRead(SS_SWITCH)){
+        if(now - btn_press[enc] > dbd){        
         Serial.printf("E#%d pressed\n",enc);
+        Serial.flush(); //teensy serial is too fast. wait for the print statment then set debounce time
+        btn_press[enc] = now;
+     }
      }
   }
 
+
   // don't overwhelm serial port
-  yield();
+  yield(); //delay calls yield, but a better coder than me put that in there... 
   delay(10);
 }
+
