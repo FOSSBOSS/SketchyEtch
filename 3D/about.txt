@@ -3,3 +3,34 @@ well, Im not even sure how this will work, but im going to try making a sketchy 
 I'd tested the concept a few days ago. The basic method is to use python to write the scad code, and pyautogui to send the F5 command to openscad
 so that the image renders.
 Openscad is pretty jank, but its the simplest avenue I know of.
+
+'''
+viewer configs (simple) 45s might be better
+
+$vpr = [0, 0, 0];       // Looking along -Z (default view)
+$vpr = [90, 0, 0];      // Looking along -Y (Y comes toward viewer)
+$vpr = [0, 90, 0];      // Looking along -X (X comes toward viewer)
+$vpr = [0, 0, 90];      // Looking along -Z, but rotated clockwise (X is left)
+$vpr = [0, 90, 90];     // Looking along -X, rotated CW (Z is down)
+$vpr = [90, 0, 90];     // Looking along -Y, rotated CW (X is right)
+$vpr = [90, 90, 0];     // Looking diagonally between -X and -Y
+$vpr = [90, 90, 90];    // Looking along -X, Z is down
+
+$vpr = [-90, 0, 0];     // Looking along +Y (Y comes toward viewer)
+$vpr = [0, -90, 0];     // Looking along +X (X comes toward viewer)
+$vpr = [0, 0, -90];     // Looking along -Z, rotated counter-clockwise (X is right)
+$vpr = [0, -90, -90];   // Looking along +X, rotated CCW (Z is down)
+$vpr = [-90, 0, -90];   // Looking along +Y, rotated CCW (X is left)
+$vpr = [-90, -90, 0];   // Looking diagonally between +X and +Y
+$vpr = [-90, -90, -90]; // Looking along +X, Z is down
+
+$vpr = [0, -90, 90];    // Looking along +X, rotated CW (Z is down)
+$vpr = [90, 0, -90];    // Looking along -Y, rotated CCW (X is left)
+$vpr = [-90, 90, 0];    // Looking diagonally between -X and +Y
+$vpr = [90, -90, -90];  // Looking along +X, Z is down
+
+
+so thats a bunch of views. then there is $vpd, a depth type variable.
+well set vpd to something like what is drawn +N.
+
+'''
