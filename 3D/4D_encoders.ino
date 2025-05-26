@@ -1,7 +1,5 @@
-
 #include <Wire.h>
 #include "Adafruit_seesaw.h"
-//#include <seesaw_neopixel.h>
 #include <Keyboard.h>
 
 /*Tenative idea is to have X,Y,Z, and view select*/
@@ -60,7 +58,7 @@ unsigned long now = millis();
      // did we move around?
      if (encoder_positions[enc] != new_position) {
       encoder_positions[enc] = new_position; // update position before printing
-      Serial.printf("E1: %ld, E2: %ld, E3: %ld, E4: %ld\n", encoder_positions[0],encoder_positions[1],encoder_positions[2],encoder_positions[3]);      
+      Serial.printf("X: %ld, Y: %ld, Z: %ld, E4: %ld\n", encoder_positions[0],encoder_positions[1],encoder_positions[2],encoder_positions[3]);      
      }
 
      if (! encoders[enc].digitalRead(SS_SWITCH)){
@@ -74,7 +72,6 @@ unsigned long now = millis();
 
 
   // don't overwhelm serial port
-  yield(); //delay calls yield, but a better coder than me put that in there... 
+  yield(); //delay calls yield
   delay(10);
 }
-
