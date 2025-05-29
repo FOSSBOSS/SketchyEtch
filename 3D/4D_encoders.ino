@@ -59,7 +59,7 @@ unsigned long now = millis();
      if (encoder_positions[enc] != new_position) {
       encoder_positions[enc] = new_position; // update position before printing
       //Serial.printf("X: %ld, Y: %ld, Z: %ld, E4: %ld\n", encoder_positions[0],encoder_positions[1],encoder_positions[2],encoder_positions[3]);
-      Serial.printf("X: %ld, Y: %ld, Z: %ld, R: %ld , V: %ld \n", encoder_positions[0],encoder_positions[1],encoder_positions[2],encoder_positions[3],encoder_positions[4]);            
+      Serial.printf("X: %ld, Y: %ld, Z: %ld, R: %ld, V: %ld \n", encoder_positions[0],encoder_positions[1],encoder_positions[2],encoder_positions[3],encoder_positions[4]);            
      }
 
      if (! encoders[enc].digitalRead(SS_SWITCH)){
