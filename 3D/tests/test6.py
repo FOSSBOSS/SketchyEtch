@@ -5,6 +5,7 @@ import serial
 import subprocess
 from time import sleep
 import pyautogui
+pyautogui.FAILSAFE = False # stop 0,0 safety feature
 # you dont need theta if youre drawing a cube
 #
 # Todo: Coalencense? make xyz blocks append when 2 of the 3 arent changing.
