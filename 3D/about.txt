@@ -1,9 +1,10 @@
-well, Im not even sure how this will work, but im going to try making a sketchy etch version that can write openscad files.
-
-I'd tested the concept a few days ago. The basic method is to use python to write the scad code, and pyautogui to send the F5 command to openscad
-so that the image renders.
+ok it can work, so now im figuring how to make it work better.
+I realized my code sucks when I took the controler appart, and re-assembled it. annoyance ensuded.
 Openscad is pretty jank, but its the simplest avenue I know of.
 
+probably just stick to 45 degree x,y, and make E#2 button toggle rotate vs zoom.
+oh and we're going to try making a clear function to zero the encoders, delete all the objects, and reset all the variables. 
+oh and the is a fair number of colors in openscad. no idea if that integrates with a printer easily.
 '''
 viewer configs (simple) 45s might be better
 
