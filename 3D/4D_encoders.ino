@@ -55,9 +55,20 @@ for (uint8_t enc = 0; enc < Nencoders; enc++) {
     Serial.println();
   }
 
+void cls(){
+  for (uint8_t enc = 0; enc < Nencoders; enc++) {
+  encoders[enc].setEncoderPosition(0);
+  }
+  }
 
 void loop() {
-  // I wonder if there is a way to send zeros to the encoders from the main program
+
+if(Serial.available()){
+  char c = Serial.read();
+  if(c == 'c'){
+    cls();
+    }
+  }
 unsigned long now = millis(); 
   for (uint8_t enc=0; enc<sizeof(found_encoders); enc++) {
      if (found_encoders[enc] == false) continue;
