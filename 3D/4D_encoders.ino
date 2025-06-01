@@ -69,6 +69,7 @@ if(Serial.available()){
     cls();
     }
   }
+
 unsigned long now = millis(); 
   for (uint8_t enc=0; enc<sizeof(found_encoders); enc++) {
      if (found_encoders[enc] == false) continue;
@@ -78,7 +79,8 @@ unsigned long now = millis();
      if (encoder_positions[enc] != new_position) {
       encoder_positions[enc] = new_position; // update position before printing
       //Serial.printf("X: %ld, Y: %ld, Z: %ld, E4: %ld\n", encoder_positions[0],encoder_positions[1],encoder_positions[2],encoder_positions[3]);
-      Serial.printf("X: %ld, Y: %ld, Z: %ld, R: %ld , V: %ld \n", encoder_positions[0],encoder_positions[1],encoder_positions[2],encoder_positions[3],encoder_positions[4]);            
+      //Serial.printf("X: %ld, Y: %ld, Z: %ld, R: %ld, V: %ld \n", encoder_positions[0],encoder_positions[1],encoder_positions[2],encoder_positions[3],encoder_positions[4]); 
+      Serial.printf("X: %ld, Y: %ld, Z: %ld, R: %ld\n", encoder_positions[0],encoder_positions[1],encoder_positions[2],encoder_positions[3]);            
      }
 
      if (! encoders[enc].digitalRead(SS_SWITCH)){
@@ -92,6 +94,6 @@ unsigned long now = millis();
 
 
   // don't overwhelm serial port
-  //yield(); //delay calls yield
+  yield(); //delay calls yield
   delay(10);
 }
