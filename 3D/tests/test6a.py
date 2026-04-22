@@ -31,14 +31,16 @@ def brick_scad():
 # this addresses an issue in open scad around load large files, by ensuring the output file is always blank
 # OMG here is my errase function
 def lego_scad():
-    with open('lego.scad','w') as f:
-        f.write('use <brick.scad>;\n')
-
+    with open(OUTPUT_FILE, "w") as f:
+        f.write("use <brick.scad>;\n")
+        f.write("$vpd = 600;\n")
+        f.write("$vpr = [60,0,0];\n")
 brick_scad()
 lego_scad()
 
 def launch_openscad():
     subprocess.Popen(["openscad", OUTPUT_FILE])
+    #subprocess.Popen(["openscad", OUTPUT_FILE])
     sleep(2)
 
 #def update_scad_with_brick(x, y, z, rotation_deg):
@@ -63,95 +65,118 @@ def update_scad_with_brick(x, y, z):
     pyautogui.press("f5")
     sleep(0.2)
 
-'''
-def update_scad_with_brick(x, y, z, rotation_deg):
-    brick_line = f"rotate([0,0,{rotation_deg}]) translate([{x}, {y}, {z}]) lego_brick(4);\n"
-
+def update_view(rotation):
     try:
-        with open(OUTPUT_FILE, "a") as f:
-            f.write(brick_line)
+        with open(OUTPUT_FILE, "r") as f:
+            lines = f.readlines()
+
+        found_vpr = False
+
+        with open(OUTPUT_FILE, "w") as f:
+            for line in lines:
+                if line.strip().startswith("$vpr"):
+                    f.write(f"$vpr = [60,0,{rotation}];\n")
+                    found_vpr = True
+                else:
+                    f.write(line)
+
+            if not found_vpr:
+                f.write(f"$vpr = [60,0,{rotation}];\n")
+
     except Exception as e:
-        print("Error writing brick to SCAD file:", e)
+        print("Error updating view:", e)
         return
 
-    print(f"Added brick at x={x} y={y} z={z} rotation={rotation_deg}")
-    pyautogui.press("f5")
-    sleep(0.2)
-'''
+    print(f"[VIEW] Set to [60,0,{rotation}]")
+
+
 def main():
     global current_position, current_rotation
 
     try:
-        # Ensure SCAD file starts with module include
+        # Ensure SCAD file exists and initialized
         if not os.path.exists(OUTPUT_FILE):
-            with open(OUTPUT_FILE, "w") as f:
-                f.write(f'use <{BRICK_MODULE_FILE}>;\n')
-
-        ser = serial.Serial(PORT, BAUD, timeout=1)
-        print("Listening to Teensy on", PORT)
+            lego_scad()
 
         launch_openscad()
+        sleep(2)
+
+        ser = serial.Serial(PORT, BAUD, timeout=1)
+        sleep(2)
+        ser.reset_input_buffer()
+
+        print("Listening to Teensy on", PORT)
+
         last_positions = [0, 0, 0, 0, 0]  # X, Y, Z, R, V
 
         while True:
-            line = ser.readline().decode(errors="ignore").strip()
+            try:
+                line = ser.readline().decode(errors="ignore").strip()
+            except serial.serialutil.SerialException as e:
+                print(f"[SERIAL ERROR] {e}")
+                sleep(1)
+                ser = serial.Serial(PORT, BAUD, timeout=1)
+                sleep(2)
+                ser.reset_input_buffer()
+                print("[SERIAL] Reconnected")
+                continue
 
             if line:
-                print("RAW:", line)  # Log all input for debugging
+                print("RAW:", line)
 
-            if line.startswith("X:"):
-                match = re.match(r"X:\s*(-?\d+), Y:\s*(-?\d+), Z:\s*(-?\d+), R:\s*(-?\d+), V:\s*(-?\d+)", line)
+            if not line.startswith("X:"):
+                continue
 
-                if match:
-                    new_positions = list(map(int, match.groups()))
-                    if new_positions != last_positions:
-                        print(f"[ENCODER UPDATE] X={new_positions[0]} Y={new_positions[1]} Z={new_positions[2]} R={new_positions[3]} V={new_positions[4]}")
-                        # Compute real-world position
-                        x_real = new_positions[0] * X_STEP
-                        y_real = new_positions[1] * Y_STEP
-                        z_real = new_positions[2] * Z_STEP
-                        #angle = (new_positions[3] % 4) * 90
-                        #brick_key = (x_real, y_real, z_real, angle)
-                        brick_key = (x_real, y_real, z_real)
+            match = re.match(
+                r"X:\s*(-?\d+), Y:\s*(-?\d+), Z:\s*(-?\d+), R:\s*(-?\d+), V:\s*(-?\d+)",
+                line
+            )
 
-                        if brick_key not in placed_bricks:
-                            print(f"[AUTO-DRAW] Placing brick at {brick_key}")
-                            #update_scad_with_brick(x_real, y_real, z_real, angle)
-                            update_scad_with_brick(x_real, y_real, z_real)
-                        else:
-                            print(f"[SKIP] Brick already placed at {brick_key}")
+            if not match:
+                print("[WARN] Failed to parse encoder line:", line)
+                continue
 
-                        last_positions = new_positions
-                        current_position = new_positions[0:3]
-                        current_rotation = new_positions[3] % 2 # becuase only only 0,90 mater. its a regular block.
-                
-                else:
-                    print("[WARN] Failed to parse encoder line:", line)
-            '''
-            elif line == "E#0 pressed":
-                print("[BUTTON] E#0 (View) pressed")
-            elif line == "E#1 pressed":
-                print("[BUTTON] E#1 (Z) pressed")
-            elif line == "E#2 pressed":
-                print("[BUTTON] E#2 (X) pressed")
-            elif line == "E#3 pressed":
-                if current_position is None:
-                    print("[SKIP] No position data yet ignoring button press")
-                    continue
-                print("[BUTTON] E#3 (Y / PLACE) pressed  Drawing brick")
+            new_positions = list(map(int, match.groups()))
 
-                x_real = current_position[0] * X_STEP
-                y_real = current_position[1] * Y_STEP
-                z_real = current_position[2] * Z_STEP
-                angle = current_rotation * 90
+            if new_positions == last_positions:
+                continue  # no change, skip everything
 
-                print(f"[DRAW] Brick @ X:{x_real} Y:{y_real} Z:{z_real} Angle:{angle}")
-                update_scad_with_brick(x_real, y_real, z_real, angle)
+            x, y, z, r, v = new_positions
 
-            elif line == "E#4 pressed":
-                print("[BUTTON] E#4 (Rotate) pressed")
-            '''
+            print(f"[ENCODER UPDATE] X={x} Y={y} Z={z} R={r} V={v}")
 
+            # ---- Position → real world ----
+            x_real = x * X_STEP
+            y_real = y * Y_STEP
+            z_real = round(z * Z_STEP, 2)  # prevent float drift
+
+            brick_key = (x_real, y_real, z_real)
+
+            # ---- Brick placement ----
+            if brick_key not in placed_bricks:
+                print(f"[AUTO-DRAW] Placing brick at {brick_key}")
+                update_scad_with_brick(x_real, y_real, z_real)
+            else:
+                print(f"[SKIP] Brick already placed at {brick_key}")
+
+            # ---- View rotation (1 tick = 1 degree) ----
+            if r != last_positions[3]:
+                angle = r
+                update_view(angle)
+
+            # ---- Update state ----
+            last_positions = new_positions
+            current_position = (x, y, z)
+            current_rotation = r
+
+    except KeyboardInterrupt:
+        print("\nInterrupted by user. Exiting.")
+        try:
+            if ser and ser.is_open:
+                ser.close()
+                print("[INFO] Serial port closed.")
+        except Exception as e:
+            print(f"[WARN] Error closing serial port: {e}")
     except KeyboardInterrupt:
         print("\nInterrupted by user. Exiting.")
         try:
