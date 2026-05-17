@@ -3,8 +3,8 @@
 #include <Bounce2.h>
 #include <Wire.h>
 #include "Adafruit_seesaw.h"
+#include <Keyboard.h>
 
-// comiple with serial + keyboard + joystick + mouse
 #define SS_SWITCH        24      // this is the pin on the encoder connected to switch
 #define SEESAW_BASE_ADDR          0x36  // I2C address, starts with 0x36
 const uint8_t Nencoders = 2;
@@ -31,7 +31,28 @@ int prevEncoder1Position = 0;
 int prevEncoder2Position = 0;
 
 void setup() {
+
+  pinMode(0, OUTPUT);
+  digitalWrite(0,LOW); // use io as reference.
   Serial.begin(115200);
+ // forgot the buttons lol
+  pinMode(color_Btn, INPUT_PULLUP);
+  pinMode(clear_Btn, INPUT_PULLUP);
+  pinMode(lift_Btn,  INPUT_PULLUP);
+  pinMode(save_Btn,  INPUT_PULLUP);
+  pinMode(demo_Btn,  INPUT_PULLUP);
+
+  colorButton.attach(color_Btn);
+  clearButton.attach(clear_Btn);
+  liftButton.attach(lift_Btn);
+  saveButton.attach(save_Btn);
+  demoButton.attach(demo_Btn);
+
+  colorButton.interval(25);
+  clearButton.interval(25);
+  liftButton.interval(25);
+  saveButton.interval(25);
+  demoButton.interval(25);
   Wire.begin();
   while (!Serial) delay(10);
 
@@ -74,8 +95,7 @@ void loop() {
      if (encoder_positions[enc] != new_position) {
       encoder_positions[enc] = new_position; // update position before printing
     // Serial.printf("X: %ld, Y: %ld \n", encoder_positions[0],encoder_positions[1]);            
-    // Update previous positions for next iteration
-    // Read encoder positions
+
   int encoder1Position = encoder_positions[0];
   int encoder2Position = encoder_positions[1];
     // Detect encoder 1 movement direction
@@ -90,9 +110,9 @@ void loop() {
   int encoder2Direction = 0;
   if (encoder2Position > prevEncoder2Position) {
       encoder2Direction = 1; // Positive direction
-  } else if (encoder2Position < prevEncoder2Position) {
-      encoder2Direction = -1; // Negative direction
-  }
+      } else if (encoder2Position < prevEncoder2Position) {
+           encoder2Direction = -1; // Negative direction
+        }
 
   prevEncoder1Position = encoder1Position;
   prevEncoder2Position = encoder2Position;
@@ -107,51 +127,48 @@ void loop() {
     Keyboard.press(KEY_RIGHT_ARROW);
     Keyboard.release(KEY_RIGHT_ARROW);
   } else {
-    // Serial.println("");  
     Keyboard.release(KEY_RIGHT_ARROW);
     Keyboard.release(KEY_LEFT_ARROW);
   }
 
   if (encoder2Direction == 1) {
-    // Serial.println("UP");
+    Serial.println("UP");
     Keyboard.press(KEY_UP_ARROW);
     Keyboard.release(KEY_UP_ARROW);
   } else if (encoder2Direction == -1) {
-    // Serial.println("DOWN");
+    Serial.println("DOWN");
     Keyboard.press(KEY_DOWN_ARROW);
     Keyboard.release(KEY_DOWN_ARROW);
   } else {
-    // Serial.println("");
     Keyboard.release(KEY_DOWN_ARROW);
     Keyboard.release(KEY_UP_ARROW);
   }
-     }
+     
   }
-
-// Handle button presses with debouncing
+    // Handle button presses with debouncing
   colorButton.update();
   if (colorButton.fell()) {
-    // Serial.println("Color Change");
+    Serial.println("Color Change");
     Keyboard.press(KEY_G);
     Keyboard.release(KEY_G);
     }
   
   clearButton.update();
   if (clearButton.fell()) {  
-    // Serial.println("CLEAR");
+    Serial.println("CLEAR");
     Keyboard.press(KEY_C);
     Keyboard.release(KEY_C);
     }
   
   liftButton.update();
   if (liftButton.fell()) {  
-    // Serial.println("LIFT");
+    Serial.println("LIFT");
     Keyboard.press(KEY_L);
     Keyboard.release(KEY_L);
     }
   saveButton.update();
   if (saveButton.fell()) {
-    // Serial.println("Saving file");
+    Serial.println("Saving file");
     Keyboard.press(KEY_S);
     Keyboard.release(KEY_S);
     delay(5000); //Really want to prevent spamming this one.
@@ -160,9 +177,10 @@ void loop() {
 
   demoButton.update();
   if (demoButton.fell()) {
-    // Serial.println("DEMOLITION");
+    Serial.println("DEMOLITION");
     Keyboard.press(KEY_D);
     Keyboard.release(KEY_D);
-    }  
+    }
+  }  
   delay(10);
 }
