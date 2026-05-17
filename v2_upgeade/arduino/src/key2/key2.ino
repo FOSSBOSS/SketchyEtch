@@ -54,7 +54,7 @@ void setup() {
   saveButton.interval(25);
   demoButton.interval(25);
   Wire.begin();
-  while (!Serial) delay(10);
+  //while (!Serial) delay(10); // uncomment for serial debug.
 
 bool all_found = true;
 for (uint8_t enc = 0; enc < sizeof(found_encoders); enc++) {
